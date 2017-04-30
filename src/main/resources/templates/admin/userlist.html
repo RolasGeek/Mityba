@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>User List</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/admin/userlist.css}" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <table id="t01" style="margin-top:10px"><tr>
+            <td><form th:action="@{/admin/home}" method="get">
+                <button class="btn btn-md btn-info" name="home"
+                    type="Submit">Pagrindinis</button>
+            </form></td>
+            <td align="right"><form th:action="@{/logout}" method="get">
+                <button class="btn btn-md btn-danger" name="registration"
+                    type="Submit">Atsijungti</button>
+            </form></td>
+        </tr></table>
+        <div style="margin-top:40px;font-size:25px">Registruoti vartotojai:</div>
+        <span th:utext="${actionMessage}" style="color:red"></span>
+        <table id="t02">
+            <tr>
+                <th>vardas</th>
+                <th>pavardė</th>
+                <th>username</th>
+                <th>el.paštas</th>
+                <th>user_level</th>
+                <th>login_date</th>
+                <th>veiksmai</th>
+            </tr>
+            <tr th:each="u : ${users}">
+                <td th:text="${u.firstName}"></td>
+                <td th:text="${u.lastName}"></td>
+                <td th:text="${u.username}"></td>
+                <td th:text="${u.email}"></td>
+                <td th:text="${u.userLevel}"></td>
+                <td th:text="${u.loginDate}"></td>
+                <td>
+                    <form th:action="@{/admin/remove}" method="post">
+                        <input type="hidden" name="uname" th:value="${u.username}"/>
+                        <button class="btn btn-sm btn-danger btn-block" name="Submit" type="Submit" th:text="Šalinti"></button>
+                    </form>
+                </td>
+            </tr>
+        </table>
+        <div class="panel-group" style="margin-top:40px">
+            <p class="admin-welcome-text text-center" th:utext="${userName}"></p>
+            <p class="admin-message-text text-center" th:utext="${adminMessage}"></p>
+        </div>
+    </div>
+</body>
+</html>

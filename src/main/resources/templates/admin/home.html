@@ -3,24 +3,30 @@
 	xmlns:th="http://www.thymeleaf.org">
 
 <head>
-<title>Admin Page</title>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-<script	src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-<script	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <title>Admin Page</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/admin/home.css}" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 
 <body>
-	<div class="container">
-	
-		<form th:action="@{/logout}" method="get">
-			<button class="btn btn-md btn-danger btn-block" name="registration"
-				type="Submit">Atsijungti</button>
-		</form>    
-		<div>Veikia</div>
-		<div class="panel-group" style="margin-top:40px">
-				<p class="admin-message-text text-center" th:utext="${adminMessage}"></p>
-		</div>
-		
-	</div>
+    <div class="container">
+        <table style="margin-top:10px"><tr>
+            <td><form th:action="@{/admin/userlist}" method="get">
+                <button class="btn btn-md btn-info" name="userlist"
+                    type="Submit">Vartotojai</button>
+            </form></td>
+            <td align="right"><form th:action="@{/logout}" method="get">
+                <button class="btn btn-md btn-danger" name="registration"
+                    type="Submit">Atsijungti</button>
+            </form></td>
+        </tr></table>
+        <div style="margin-top:40px;font-size:25px">PAGRINDINIS</div>
+        <div class="panel-group" style="margin-top:40px">
+            <p class="admin-welcome-text text-center" th:utext="${userName}"></p>
+            <p class="admin-message-text text-center" th:utext="${adminMessage}"></p>
+        </div>
+    </div>
 </body>
 </html>
