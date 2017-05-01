@@ -66,34 +66,4 @@ public class AuthentificationController {
         modelAndView.setViewName("admin/home");
         return modelAndView;
     }
-
-    @RequestMapping(value="/admin/userlist", method = RequestMethod.GET)
-    public ModelAndView userlist(){
-        ModelAndView modelAndView = new ModelAndView();
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        RegisteredUser user = service.findUserByUsername(auth.getName());
-        List<RegisteredUser> users = service.getUsers();
-        modelAndView.addObject("users", users);
-        modelAndView.addObject("userName", "Welcome " + user.getFirstName() + " " + user.getLastName() + " (" + user.getEmail() + ")");
-        modelAndView.addObject("adminMessage","Content Available Only for Users with Admin Role");
-        modelAndView.setViewName("admin/userlist");
-        return modelAndView;
-    }
-
-    @RequestMapping(value="/admin/remove", method = RequestMethod.POST)
-    public ModelAndView remove_user(@RequestParam("uname") String uname){
-        ModelAndView userlistModel = null;
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println("aut: " + auth.getName());
-        System.out.println("uname: " + uname);
-        if(auth.getName().equals(uname)) {
-            userlistModel = userlist();
-            userlistModel.addObject("actionMessage", "Vartotojas yra prisijungęs");
-        } else {
-            service.removeUser(service.findUserByUsername(uname));
-            userlistModel = userlist();
-            userlistModel.addObject("actionMessage", "Vartotojas pašalintas");
-        }
-        return userlistModel;
-    }
 }
