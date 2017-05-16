@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Ingredient List</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/admin/ingredientlistedit.css}" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <div th:replace="include/menu :: menu"></div>
+        <div style="margin-top:40px;font-size:25px">Ingredientai:</div>
+        <span th:utext="${actionMessage}" style="color:red"></span>
+        <table id="t02">
+            <tr>
+                <th>pavadinimas</th>
+                <th>matavimo vienetas</th>
+                <th>veiksmai</th>
+            </tr>
+            <tr th:each="i : ${ingredients}">
+                <td th:text="${i.name}"></td>
+                <td th:text="${i.measureUnit}"></td>
+                <td>
+                    <form th:action="@{/admin/removeIngredient}" method="post">
+                        <input type="hidden" name="iid" th:value="${i.id}"/>
+                        <button class="btn btn-sm btn-danger btn-block" name="Submit" type="Submit" th:text="Šalinti"></button>
+                    </form>
+                </td>
+            </tr>
+            <tr>
+                <form action="#" th:action="@{/admin/ingredientlistedit}" th:object="${ingredient}" method="post" role="form">
+                    <td>
+                        <input type="text" th:field="*{name}" placeholder="pavadinimas">
+                    </td>
+                    <td>
+                        <select th:field="*{measureUnit}">
+                            <option th:each="u : ${measure}" th:value="${u.name}" th:text="${u.name}"></option>
+                        </select>
+                    </td>
+                    <td><button class="btn btn-sm btn-primary btn-block" name="Submit" type="Submit" th:text="Pridėti"></button></td>
+                </form>
+            </tr>
+        </table>
+        
+        <div th:replace="include/footer :: footer"></div>
+    </div>
+</body>
+</html>

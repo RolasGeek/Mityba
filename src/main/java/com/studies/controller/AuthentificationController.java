@@ -62,7 +62,7 @@ public class AuthentificationController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         RegisteredUser user = service.findUserByUsername(auth.getName());
         modelAndView.addObject("userName", "Welcome " + user.getFirstName() + " " + user.getLastName() + " (" + user.getEmail() + ")");
-        modelAndView.addObject("adminMessage","Content Available Only for Users with Admin Role");
+        modelAndView.addObject("userMessage","Content Available Only for Users with Admin Role");
         modelAndView.setViewName("admin/home");
         return modelAndView;
     }

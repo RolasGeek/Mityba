@@ -36,7 +36,6 @@ public class RegisteredUserServiceImpl implements RegisteredUserService {
 
     @Override
     public List<RegisteredUser> getUsers() {
-        List<RegisteredUser> users = userRep.findAll();
-        return users;
+        return userRep.findAll();
     }
 }

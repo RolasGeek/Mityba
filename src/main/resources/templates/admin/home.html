@@ -12,21 +12,9 @@
 
 <body>
     <div class="container">
-        <table style="margin-top:10px"><tr>
-            <td><form th:action="@{/admin/userlist}" method="get">
-                <button class="btn btn-md btn-info" name="userlist"
-                    type="Submit">Vartotojai</button>
-            </form></td>
-            <td align="right"><form th:action="@{/logout}" method="get">
-                <button class="btn btn-md btn-danger" name="registration"
-                    type="Submit">Atsijungti</button>
-            </form></td>
-        </tr></table>
+        <table th:replace="include/menu :: menu"></table>
         <div style="margin-top:40px;font-size:25px">PAGRINDINIS</div>
-        <div class="panel-group" style="margin-top:40px">
-            <p class="admin-welcome-text text-center" th:utext="${userName}"></p>
-            <p class="admin-message-text text-center" th:utext="${adminMessage}"></p>
-        </div>
+        <div th:replace="include/footer :: footer"></div>
     </div>
 </body>
 </html>
