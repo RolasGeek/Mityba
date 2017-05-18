@@ -27,8 +27,9 @@
                 <td th:text="${i.name}"></td>
                 <td th:text="${i.description}"></td>
                 <td th:text="${i.cooking_time}"></td>
+
                 <!--<td> <img src="data:image/jpg;base64,${i.image}"></td>-->
-                <td> <img th:src="@{/image/${i.id}" /> </td>
+                <td> <img th:with="link=${'/image/' + i.id}" th:src="@{${link}}" /> </td>
             </tr>
         </table>
     </div>

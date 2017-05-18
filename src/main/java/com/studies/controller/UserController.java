@@ -44,7 +44,7 @@ public class UserController {
         byte[] bytes = recipes.get(0).getImage();
         OutputStream outputStream = null;
         outputStream =
-                new FileOutputStream(new File("F:/img.jpg"));
+                new FileOutputStream(new File("D:/img.jpg"));
 
         outputStream.write(bytes);
         //------------------------
