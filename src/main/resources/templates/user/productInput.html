@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Ingredient List</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/admin/ingredientlistedit.css}" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <div th:replace="include/userMenu :: menu"></div>
+        <div style="margin-top:40px;font-size:25px">Produktai:</div>
+        <span th:utext="${actionMessage}" style="color:red"></span>
+        <table id="t02">
+            <tr>
+                <th>pavadinimas</th>
+                <th>matavimo vienetas</th>
+            </tr>
+            <tr>
+                <form>
+                    <td>
+                        <select>
+                            <option th:each="u : ${ingredients}" th:value="${u.name}" th:text="${u.name}"></option>
+                        </select>
+                    </td>
+                    <td>
+                        <select>
+                            <option th:each="i : ${measure}" th:value="${i.name}" th:text="${i.name}"></option>
+                        </select>
+                    </td>
+                </form>
+            </tr>
+        </table>
+
+    </div>
+</body>
+</html>
