@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Main Menu</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/admin/home.css}" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <table th:replace="include/userMenu :: menu"></table>
+        <div style="margin-top:40px;font-size:25px">MainMenu</div>
+        <div style="margin-top:40px;font-size:25px">Receptas:</div>
+        <span th:utext="${actionMessage}" style="color:red"></span>
+        <table id="t02">
+            <tr>
+                <th>Pavadinimas  </th>
+                <th> Aprašymas</th>
+                <th>Trukmė</th>
+                <th>Magic</th>
+            </tr>
+            <tr th:each="i : ${recipes}">
+                <td th:text="${i.name}"></td>
+                <td th:text="${i.description}"></td>
+                <td th:text="${i.cooking_time}"></td>
+                <!--<td> <img src="data:image/jpg;base64,${i.image}"></td>-->
+                <td> <img th:src="@{/image/${i.id}" /> </td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>
