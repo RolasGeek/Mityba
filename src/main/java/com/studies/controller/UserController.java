@@ -41,12 +41,6 @@ public class UserController {
         //-------------------------------------------------
         List<Recipe> recipes = rService.getRecipes();
         modelAndView.addObject("recipes", recipes);
-        byte[] bytes = recipes.get(0).getImage();
-        OutputStream outputStream = null;
-        outputStream =
-                new FileOutputStream(new File("D:/img.jpg"));
-
-        outputStream.write(bytes);
         //------------------------
         modelAndView.setViewName("user/home");
         return modelAndView;
