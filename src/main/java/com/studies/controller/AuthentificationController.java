@@ -117,7 +117,7 @@ public class AuthentificationController {
     }
     
     @RequestMapping(value="/passresetconfirm", method = RequestMethod.POST) 
-    public ModelAndView checkPassword(@ModelAttribute(name= "username") String username,@ModelAttribute(name= "email") String email , @RequestParam(name="newpass") String newp, @RequestParam(name="conpass") String conf) {
+    public ModelAndView checkPassword(@ModelAttribute(name="username1") String username,@ModelAttribute(name="email1") String email , @RequestParam(name="newpass") String newp, @RequestParam(name="conpass") String conf) {
     	
     	ModelAndView modelAndView = new ModelAndView();
     	if(validatePassword(newp, conf) != null) {
