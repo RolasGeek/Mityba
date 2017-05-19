@@ -2,6 +2,7 @@
 package com.studies.controller;
 
 import com.studies.model.*;
+import com.studies.service.RecipeIngredientService;
 import com.studies.service.RecipeService;
 import com.studies.service.RegisteredUserService;
 import com.studies.service.IngredientService;
@@ -27,6 +28,8 @@ public class ManagerController {
     IngredientService iService;
     @Autowired
     RecipeService rService;
+    @Autowired
+    RecipeIngredientService riService;
     
     @RequestMapping(value="/admin/userlist", method = RequestMethod.GET)
     public ModelAndView openUserList(){
@@ -64,11 +67,13 @@ public class ManagerController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         RegisteredUser user = rUserService.findUserByUsername(auth.getName());
         List<Ingredient> ingredients = iService.getIngredients();
+        RecipeIngredient r = new RecipeIngredient();
 
         modelAndView.addObject("categories", Category.values());
         modelAndView.addObject("ingredients", ingredients);
         modelAndView.addObject("recipe", new Recipe());
-        modelAndView.addObject("recipeIngredients", new ArrayList<Ingredient>());
+        modelAndView.addObject("recipeIngredients", new ArrayList<RecipeIngredient>());
+        modelAndView.addObject("tempRecipeIngredient", new RecipeIngredient());
         modelAndView.addObject("userName", "Welcome " + user.getFirstName() + " " + user.getLastName() + " (" + user.getEmail() + ")");
         modelAndView.setViewName("admin/recipeCreate");
         return modelAndView;

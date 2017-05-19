@@ -40,18 +40,19 @@
                     </select>
                 </td>
                 <td>
-                    <input type="number" step="5" th:field="*{cooking_time}" placeholder="gaminimo laikas">
+                    <input type="number" step="5" min="0" th:field="*{cooking_time}" placeholder="gaminimo laikas">
                 </td>
                 <td>
                     <input type="text" th:field="*{description}" placeholder="aprašymas">
                 </td>
                 <td>
-                    <input type="number" th:field="*{number_of_servings}" placeholder="porcijų skaičius">
+                    <input type="number" min="0" th:field="*{number_of_servings}" placeholder="porcijų skaičius">
                 </td>
 
                 <td>
                     <button class="btn btn-sm btn-primary btn-block" name="Submit" type="Submit" th:text="Pridėti"></button>
                 </td>
+
             </form>
         </tr>
     </table>
@@ -74,13 +75,13 @@
             <form th:object="${ingredient}">
                 <td>
                     <select id="test">
-                        <option th:each="i : ${ingredients}" th:value="${i.name}" th:text="${i.name} + ', ' + ${i.getMeasureUnit()}"></option>
+                        <option th:each="i : ${ingredients}" th:value="${i.id}" th:text="${i.name} + ', ' + ${i.getMeasureUnit()}"></option>
                     </select>
                 </td>
             </form>
 
             <td>
-                <input type="number" step="0.5" placeholder="kiekis" > <!--th:field="*{ingredient_amount}" placeholder="kiekis"> !-->
+                <input type="number" step="0.5" min="0" placeholder="kiekis" > <!--th:field="*{ingredient_amount}" placeholder="kiekis"> !-->
             </td>
             <td>
                 <button class="btn btn-sm btn-primary btn-block" onclick="validateAndAddRow('ingredientTable')" th:text="Pridėti"></button>
@@ -97,14 +98,28 @@
         var table = document.getElementById(tableID);
         var rowCount = table.rows.length;
 
-        var ingredientName = table.rows[rowCount - 1].cells[0].children[0].value;
+        var ingredientId = table.rows[rowCount - 1].cells[0].children[0].value;
         var ingredientAmount = table.rows[rowCount - 1].cells[1].children[0].value;
 
-        if (ingredientAmount == "" || ingredientName == ""){
-            alert("Tuščios reikšmės rastos! \n užpildykite visus laukus");
+        if (ingredientAmount == "" || ingredientId == ""){
+            alert("Tuščios reikšmės rastos! \nUžpildykite visus laukus");
         }
         else{
+            alert(ingredientId);
             //TODO: padaryti kad pildytu thymeleaf kintamaji- list.add
+
+            /*<![CDATA[*/
+
+            var iId = ingredientId;
+
+            [[${tempRecipeIngredient.setRecipeId(0)}]];
+            [[${tempRecipeIngredient.setIngredientId(1)}]];
+            [[${tempRecipeIngredient.setAmount(ingredientAmount)}]];
+
+            var b = [[${tempRecipeIngredient.getIngredientId()}]];
+
+            /*]]>*/
+
             addRow(tableID);
         }
     }
