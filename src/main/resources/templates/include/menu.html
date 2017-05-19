@@ -3,6 +3,11 @@
         <button class="btn btn-md btn-info" name="home"
             type="Submit">Pagrindinis</button>
     </form></div>
+     <div class="inner" style="display:inline-block"><form th:action="@{/passreset}" method="get">
+        <button class="btn btn-md btn-info" name="passreset"
+            type="Submit">Slaptaþodþio keitimas</button>
+    </form>
+    </div>
     <!-- TODO: pakeisti, kad nerodytu mygtuku vartojams kurie neturi prieigos -->
     <div class="inner" style="display:inline-block"><form th:action="@{/admin/userlist}" method="get">
         <button class="btn btn-md btn-info" name="userlist"

@@ -8,6 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -81,25 +82,30 @@ public class AuthentificationController {
     @RequestMapping(value="/passreset", method = RequestMethod.GET) 
     public 	ModelAndView loadRestoreWindow() {
     	ModelAndView modelAndView = new ModelAndView();
-    	modelAndView.addObject("oldDiss", false);
+		modelAndView.addObject("userDiss", false);
+		modelAndView.addObject("emailDiss", false);
     	modelAndView.addObject("newDiss", true);
     	modelAndView.addObject("conDiss", true);
-    	modelAndView.addObject("oldReq", true);
+    	modelAndView.addObject("userReq", true);
+    	modelAndView.addObject("emailReq", true);
     	modelAndView.addObject("link", "/passreset");
     	modelAndView.setViewName("auth/passreset");
     	return modelAndView;
     }
     
     @RequestMapping(value="/passreset", method = RequestMethod.POST) 
-    public ModelAndView checkData(@RequestParam(name="oldpass") String old) {
+    public ModelAndView checkData(@RequestParam(name="username") String username, @RequestParam(name="email") String email) {
     	
     	ModelAndView modelAndView = new ModelAndView();
-    	if(validateSecretData(old)) {
-    			modelAndView.addObject("oldDiss", true);
+    	if(validateSecretData(username, email)) {
+    			modelAndView.addObject("userDiss", true);
+    			modelAndView.addObject("emailDiss", true);
             	modelAndView.addObject("newDiss", false);
             	modelAndView.addObject("conDiss", false);
-            	modelAndView.addObject("oldReq", false);
-            	modelAndView.addObject("oldpass", old);
+            	modelAndView.addObject("userReq", false);
+            	modelAndView.addObject("emailReq", false);
+            	modelAndView.addObject("username", username);
+            	modelAndView.addObject("email", email);
             	modelAndView.addObject("link", "/passresetconfirm");
             	modelAndView.setViewName("auth/passreset");
     	} else {
@@ -111,23 +117,22 @@ public class AuthentificationController {
     }
     
     @RequestMapping(value="/passresetconfirm", method = RequestMethod.POST) 
-    public ModelAndView checkPassword(@RequestParam(name="oldpass") String old, @RequestParam(name="newpass") String newp, @RequestParam(name="conpass") String conf) {
+    public ModelAndView checkPassword(@ModelAttribute(name= "username") String username,@ModelAttribute(name= "email") String email , @RequestParam(name="newpass") String newp, @RequestParam(name="conpass") String conf) {
     	
     	ModelAndView modelAndView = new ModelAndView();
     	if(validatePassword(newp, conf) != null) {
     		System.out.println("toli");
     	} else {
-    		checkData(old);
+    		checkData(username, email);
     	}
     	
     	
     	return modelAndView;
     }
     
-    public boolean validateSecretData(String password) {
-    	String username = SecurityContextHolder.getContext().getAuthentication().getName();
+    public boolean validateSecretData(String username, String email) {
     	RegisteredUser user = service.findUserByUsername(username);
-    	return encoder.matches(password, user.getPassword());
+    	return email.equals(user.getEmail());
     }
     
     public String validatePassword(String pass1, String pass2) {
