@@ -4,6 +4,7 @@
             type="Submit">Pagrindinis</button>
     </form></div>
     <!-- TODO: pakeisti, kad nerodytu mygtuku vartojams kurie neturi prieigos -->
+    <!--th:if="${1 == 1}" th:if="${'rolas'.equals('rolandukas')}"-->
     <div class="inner" style="display:inline-block"><form th:action="@{/admin/userlist}" method="get">
         <button class="btn btn-md btn-info" name="userlist"
             type="Submit">Vartotojai</button>

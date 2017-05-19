@@ -5,8 +5,8 @@ import com.studies.model.UserIngredient;
 import java.util.List;
 
 public interface UserIngredientService {
-    UserIngredient findProductById(Long id);
-    void saveProduct(UserIngredient product);
-    void removeProduct(UserIngredient product);
-    List<UserIngredient> getProducts();
+    UserIngredient findUserIngredientById(Long id);
+    void saveUserIngredient(UserIngredient userIngredient);
+    void removeUserIngredient(UserIngredient userIngredient);
+    List<UserIngredient> getUserIngredient();
 }

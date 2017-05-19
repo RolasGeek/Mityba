@@ -4,11 +4,12 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
+
 /**
  Vartotojo turimi produktai
  */
 @Entity
-@Table(name = "product")
+@Table(name = "userIngredient")
 public class UserIngredient {
     @Id
     @GeneratedValue
@@ -20,8 +21,8 @@ public class UserIngredient {
     @Column(name = "name")
     private String name;
 
-    @Pattern(regexp = "([0-9]*)", message = "Laukas turi būti sudarytas tik iš skaičių")
-    @NotEmpty(message = "*Neįvestas produkto kiekis")
+   // @Pattern(regexp = "([0-9]*)", message = "Laukas turi būti sudarytas tik iš skaičių")
+  //  @NotEmpty(message = "*Neįvestas produkto kiekis")
     @Column(name = "amount")
     private Double amount;
 

@@ -19,10 +19,9 @@
         <tr>
             <th>Pavadinimas</th>
             <th>Kategorija</th>
-            <th>Gaminimo laikas</th>
+            <th>Gaminimo laikas, min</th>
             <th>Aprašymas</th>
-            <th>Porcijų skaičius</th>
-            <th>Ingrediento pavadinimas | kiekis</th>
+            <th>Porcijų skaičius, vnt</th>
         </tr>
 
         <tr style="height: 10px; background-color: #FFFFFF;">
@@ -36,10 +35,12 @@
                     <input type="text" th:field="*{name}" placeholder="pavadinimas">
                 </td>
                 <td>
-                    <input type="text" th:field="*{category}" placeholder="kategorija">
+                    <select th:field="*{category}">
+                        <option th:each="c : ${categories}" th:value="${c.name}" th:text="${c.name}"></option>
+                    </select>
                 </td>
                 <td>
-                    <input type="number" step="0.1" th:field="*{cooking_time}" placeholder="gaminimo laikas">
+                    <input type="number" step="5" th:field="*{cooking_time}" placeholder="gaminimo laikas">
                 </td>
                 <td>
                     <input type="text" th:field="*{description}" placeholder="aprašymas">
@@ -49,31 +50,94 @@
                 </td>
 
                 <td>
-                    <table id="t02">
-                        <tr>
-                            <form th:object="${ingredient}">
-                                <td>
-                                    <select>
-                                        <option th:each="i : ${ingredients}" th:value="${i.name}" th:text="${i.name} + ', ' + ${i.getMeasureUnit()}"></option>
-                                    </select>
-                                </td>
-                            </form>
-
-                            <td>
-                                <input type="text"> <!--th:field="*{ingredient_amount}" placeholder="kiekis"> !-->
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-
-                <td>
                     <button class="btn btn-sm btn-primary btn-block" name="Submit" type="Submit" th:text="Pridėti"></button>
                 </td>
             </form>
         </tr>
     </table>
 
+    <br>
+    <br>
+    <br>
+
+    <div style="margin-top:40px;font-size:25px">Ingredientai:</div>
+    <table id="ingredientTable">
+        <tr>
+            <th>
+                Pavadinimas
+            </th>
+            <th>
+                Kiekis
+            </th>
+        </tr>
+        <tr>
+            <form th:object="${ingredient}">
+                <td>
+                    <select id="test">
+                        <option th:each="i : ${ingredients}" th:value="${i.name}" th:text="${i.name} + ', ' + ${i.getMeasureUnit()}"></option>
+                    </select>
+                </td>
+            </form>
+
+            <td>
+                <input type="number" step="0.5" placeholder="kiekis" > <!--th:field="*{ingredient_amount}" placeholder="kiekis"> !-->
+            </td>
+            <td>
+                <button class="btn btn-sm btn-primary btn-block" onclick="validateAndAddRow('ingredientTable')" th:text="Pridėti"></button>
+            </td>
+        </tr>
+    </table>
+
     <div th:replace="include/footer :: footer"></div>
 </div>
+
+<script th:inline="javascript">
+
+    function validateAndAddRow(tableID){
+        var table = document.getElementById(tableID);
+        var rowCount = table.rows.length;
+
+        var ingredientName = table.rows[rowCount - 1].cells[0].children[0].value;
+        var ingredientAmount = table.rows[rowCount - 1].cells[1].children[0].value;
+
+        if (ingredientAmount == "" || ingredientName == ""){
+            alert("Tuščios reikšmės rastos! \n užpildykite visus laukus");
+        }
+        else{
+            //TODO: padaryti kad pildytu thymeleaf kintamaji- list.add
+            addRow(tableID);
+        }
+    }
+
+</script>
+
+<script th:inline="javascript">
+
+    function addRow(tableID) {
+
+        var table = document.getElementById(tableID);
+
+        var rowCount = table.rows.length;
+        var row = table.insertRow(rowCount);
+
+        var colCount = table.rows[1].cells.length;
+
+        for(var i=0; i<colCount; i++) {
+
+            var newcell	= row.insertCell(i);
+
+            newcell.innerHTML = table.rows[1].cells[i].innerHTML;
+            //alert(newcell.childNodes);
+            switch(newcell.childNodes[1].type) {
+                case "text":
+                    newcell.childNodes[1].value = "";
+                    break;
+                case "select-one":
+                    newcell.childNodes[1].selectedIndex = 0;
+                    break;
+            }
+        }
+    }
+</script>
 </body>
 </html>

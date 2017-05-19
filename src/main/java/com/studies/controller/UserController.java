@@ -6,6 +6,7 @@ import com.studies.service.RegisteredUserService;
 import com.studies.service.IngredientService;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.sun.org.apache.regexp.internal.RE;
@@ -15,10 +16,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.validation.Valid;
+
 /**
  Neprisijungusio vartotojo
  */
@@ -46,7 +51,6 @@ public class UserController {
         return modelAndView;
     }
 
-
     @RequestMapping(value = "/image/{image_id}", produces = MediaType.IMAGE_PNG_VALUE)
     public ResponseEntity<byte[]> getImage(@PathVariable("image_id") Long imageId) throws IOException {
 
@@ -56,12 +60,6 @@ public class UserController {
         headers.setContentType(MediaType.IMAGE_PNG);
         return new ResponseEntity<byte[]>(imageContent, headers, HttpStatus.OK);
     }
-//    @RequestMapping(value={"/user/recipesByProducts"}, method = RequestMethod.GET)
-//    public ModelAndView showRecipesByProducts(){
-//        ModelAndView modelAndView = new ModelAndView();
-//        modelAndView.setViewName("user/recipesByProducts");
-//        return modelAndView;
-//    }
     @RequestMapping(value={"/user/productInput"}, method = RequestMethod.GET)
     public ModelAndView showProductsInput() {
         ModelAndView modelAndView = new ModelAndView();
@@ -69,9 +67,26 @@ public class UserController {
         List<Ingredient> ingredients = iService.getIngredients();
         modelAndView.addObject("ingredients", ingredients);
         modelAndView.addObject("measure", Measure.values());
+        modelAndView.addObject("ingredient", new UserIngredient());
         //------------------------
         modelAndView.setViewName("user/productInput");
         return modelAndView;
     }
+    @RequestMapping(value="/user/productInput", method = RequestMethod.POST)
+    public ModelAndView addUserIngredient(@Valid UserIngredient ingredient, BindingResult bindingResult) {
+        ModelAndView userIngredientListModel = null;
+        List<UserIngredient> userIngredients = new ArrayList<>();
 
+        if (!bindingResult.hasErrors()) {
+            //pService.saveUserIngredient(ingredient);
+            userIngredients.add(ingredient);
+            userIngredientListModel = showProductsInput();
+            userIngredientListModel.addObject("actionMessage", "Ingredientas pridėtas");
+        } else {
+            userIngredientListModel = showProductsInput();
+            userIngredientListModel.addObject("actionMessage", "Ingredientas nesukurtas");
+        }
+        System.out.println("LISTAS"+userIngredients.get(0).getName());
+        return userIngredientListModel;
+    }
 }

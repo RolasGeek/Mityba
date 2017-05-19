@@ -1,13 +1,12 @@
 
 package com.studies.controller;
 
-import com.studies.model.Recipe;
-import com.studies.model.RegisteredUser;
-import com.studies.model.Ingredient;
-import com.studies.model.Measure;
+import com.studies.model.*;
 import com.studies.service.RecipeService;
 import com.studies.service.RegisteredUserService;
 import com.studies.service.IngredientService;
+
+import java.util.ArrayList;
 import java.util.List;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,8 +65,10 @@ public class ManagerController {
         RegisteredUser user = rUserService.findUserByUsername(auth.getName());
         List<Ingredient> ingredients = iService.getIngredients();
 
+        modelAndView.addObject("categories", Category.values());
         modelAndView.addObject("ingredients", ingredients);
         modelAndView.addObject("recipe", new Recipe());
+        modelAndView.addObject("recipeIngredients", new ArrayList<Ingredient>());
         modelAndView.addObject("userName", "Welcome " + user.getFirstName() + " " + user.getLastName() + " (" + user.getEmail() + ")");
         modelAndView.setViewName("admin/recipeCreate");
         return modelAndView;

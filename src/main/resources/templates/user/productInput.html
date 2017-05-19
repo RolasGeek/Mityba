@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!--<script type="text/javascript" th:src="@{/js/addRow.js}"></script>-->
 </head>
 
 <body>
@@ -15,27 +16,56 @@
         <div th:replace="include/userMenu :: menu"></div>
         <div style="margin-top:40px;font-size:25px">Produktai:</div>
         <span th:utext="${actionMessage}" style="color:red"></span>
-        <table id="t02">
+        <input type="button" value="Add Row" onclick="addRow('t02')" />
+        <table id="t02" width="350px" border="1">
             <tr>
-                <th>pavadinimas</th>
-                <th>matavimo vienetas</th>
-            </tr>
-            <tr>
-                <form>
+                <form action="#" th:action="@{/user/productInput}" th:object="${ingredient}" method="post" role="form">
                     <td>
-                        <select>
+                        <select type="text" name="txt" th:field="*{name}">
                             <option th:each="u : ${ingredients}" th:value="${u.name}" th:text="${u.name}"></option>
                         </select>
                     </td>
                     <td>
-                        <select>
+                        <input type="text" th:field="*{amount}" placeholder="kiekis">
+                    </td>
+                    <td>
+                        <select name="country" th:field="*{measureUnit}">
                             <option th:each="i : ${measure}" th:value="${i.name}" th:text="${i.name}"></option>
                         </select>
                     </td>
+                    <td><button class="btn btn-sm btn-primary btn-block" name="Submit" type="Submit" th:text="Gauti"></button></td>
                 </form>
             </tr>
         </table>
 
     </div>
+
+<script>
+    function addRow(tableID) {
+
+        var table = document.getElementById(tableID);
+
+        var rowCount = table.rows.length;
+        var row = table.insertRow(rowCount);
+
+        var colCount = table.rows[0].cells.length;
+
+        for(var i=0; i<colCount; i++) {
+
+            var newcell	= row.insertCell(i);
+
+            newcell.innerHTML = table.rows[0].cells[i].innerHTML;
+            //alert(newcell.childNodes);
+            switch(newcell.childNodes[0].type) {
+                case "text":
+                    newcell.childNodes[0].value = "";
+                    break;
+                case "select-one":
+                    newcell.childNodes[0].selectedIndex = 0;
+                    break;
+            }
+        }
+    }
+</script>
 </body>
 </html>

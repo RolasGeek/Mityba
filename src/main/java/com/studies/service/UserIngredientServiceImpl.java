@@ -10,25 +10,25 @@ import java.util.List;
 @Service("productService")
 public class UserIngredientServiceImpl implements UserIngredientService {
     @Autowired
-    private UserIngredientRepository productRep;
+    private UserIngredientRepository userIngredientRep;
 
     @Override
-    public UserIngredient findProductById(Long id) {
-        return productRep.findById(id);
+    public UserIngredient findUserIngredientById(Long id) {
+        return userIngredientRep.findById(id);
     }
 
     @Override
-    public void saveProduct(UserIngredient product) {
-        productRep.save(product);
+    public void saveUserIngredient(UserIngredient userIngredient) {
+        userIngredientRep.save(userIngredient);
     }
 
     @Override
-    public void removeProduct(UserIngredient product) {
-        productRep.delete(product);
+    public void removeUserIngredient(UserIngredient userIngredient) {
+        userIngredientRep.delete(userIngredient);
     }
 
     @Override
-    public List<UserIngredient> getProducts() {
-        return productRep.findAll();
+    public List<UserIngredient> getUserIngredient() {
+        return userIngredientRep.findAll();
     }
 }
