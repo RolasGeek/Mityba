@@ -1,9 +1,11 @@
 
 package com.studies.controller;
 
+import com.studies.model.Recipe;
 import com.studies.model.RegisteredUser;
 import com.studies.model.Ingredient;
 import com.studies.model.Measure;
+import com.studies.service.RecipeService;
 import com.studies.service.RegisteredUserService;
 import com.studies.service.IngredientService;
 import java.util.List;
@@ -24,6 +26,8 @@ public class ManagerController {
     RegisteredUserService rUserService;
     @Autowired
     IngredientService iService;
+    @Autowired
+    RecipeService rService;
     
     @RequestMapping(value="/admin/userlist", method = RequestMethod.GET)
     public ModelAndView openUserList(){
@@ -51,6 +55,21 @@ public class ManagerController {
         modelAndView.addObject("userName", "Welcome " + user.getFirstName() + " " + user.getLastName() + " (" + user.getEmail() + ")");
         modelAndView.addObject("userMessage","Content Available Only for Users with Admin Role");
         modelAndView.setViewName("admin/ingredientlistedit");
+        return modelAndView;
+    }
+
+    // recepto kurimo lango atidarymas
+    @RequestMapping(value="/admin/recipeCreate", method = RequestMethod.GET)
+    public ModelAndView recipeCreate(){
+        ModelAndView modelAndView = new ModelAndView();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        RegisteredUser user = rUserService.findUserByUsername(auth.getName());
+        List<Ingredient> ingredients = iService.getIngredients();
+
+        modelAndView.addObject("ingredients", ingredients);
+        modelAndView.addObject("recipe", new Recipe());
+        modelAndView.addObject("userName", "Welcome " + user.getFirstName() + " " + user.getLastName() + " (" + user.getEmail() + ")");
+        modelAndView.setViewName("admin/recipeCreate");
         return modelAndView;
     }
     
@@ -93,4 +112,21 @@ public class ManagerController {
         ingredientlistModel.addObject("actionMessage", "Ingredientas pašalintas");
         return ingredientlistModel;
     }
+
+    // recepto sukurimas
+    @RequestMapping(value="/admin/createRecipe", method = RequestMethod.POST)
+    public ModelAndView createRecipe(@Valid Recipe recipe, BindingResult bindingResult){
+        ModelAndView recipeListModel = null;
+        if (!bindingResult.hasErrors()){
+            rService.saveRecipe(recipe);
+            recipeListModel = recipeCreate();
+            recipeListModel.addObject("actionMessage", "Receptas pridėtas");
+        }
+        else{
+            recipeListModel = recipeCreate();
+            recipeListModel.addObject("actionMessage", "Receptas nesukurtas");
+        }
+        return recipeListModel;
+    }
+
 }
