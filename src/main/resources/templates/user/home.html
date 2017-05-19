@@ -19,17 +19,11 @@
         <table id="t02">
             <tr>
                 <th>Pavadinimas  </th>
-                <th> Aprašymas</th>
-                <th>Trukmė</th>
                 <th>Magic</th>
             </tr>
             <tr th:each="i : ${recipes}">
                 <td th:text="${i.name}"></td>
-                <td th:text="${i.description}"></td>
-                <td th:text="${i.cooking_time}"></td>
-
-                <!--<td> <img src="data:image/jpg;base64,${i.image}"></td>-->
-                <td> <img th:with="link=${'/image/' + i.id}" th:src="@{${link}}" /> </td>
+                <td><a th:href="@{productInput}"> <img th:with="link=${'/image/' + i.id}" th:src="@{${link}}" /></a></td>
             </tr>
         </table>
     </div>
