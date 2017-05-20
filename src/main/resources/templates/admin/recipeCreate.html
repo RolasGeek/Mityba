@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org" xmlns:tr="http://www.thymeleaf.org">
 
 <head>
     <title>Recepto kūrimas</title>
@@ -14,11 +14,10 @@
 <div class="container">
     <div th:replace="include/menu :: menu"></div>
     <div style="margin-top:40px;font-size:25px">Recepto sukūrimas:</div>
-    <span th:utext="${actionMessage}" style="color:red"></span>
+    <span th:utext="${RecipeActionMessage}" style="color:red"></span>
 
 
-        <form action="#" th:action="@{/admin/recipeCreate}" method="post" role="form">
-
+        <form action="#" th:action="@{/admin/createRecipe}" method="post" role="form">
 
             <input type="text" th:field="*{recipe.name}" placeholder="pavadinimas">
 
@@ -35,7 +34,8 @@
             <br>
             <br>
 
-            <form th:object="${recipe}">
+            <span th:utext="${actionMessage}" style="color:red"></span>
+            <div th:object="${recipe}" method="post" th:action="@{/admin/recipeCreate}">
                 <table>
                     <tr>
                         <th>Ingredientas</th>
@@ -44,30 +44,29 @@
 
                     <tr th:each="r : ${recipeIngredients}">
                         <td>
-                            <select>
-                                <option th:value="${r.ingredientId}" th:each="i : ${ingredients}" th:text="${i.name} + ', ' + ${i.getMeasureUnit()}"></option>
-                            </select>
+                            <input th:value="${r.ingredientId}" readonly>
                         </td>
                         <td>
-                            <input type="number" step="0.5" min="0" th:value="${r.amount}">
+                            <input type="number" step="0.5" min="0" th:value="${r.amount}" readonly>
                         </td>
                     </tr>
 
-                    <tr>
+
+                    <tr th:object="${tempRecipeIngredient}">
                         <td>
-                            <select>
+                            <select th:field="*{ingredientId}">
                                 <option th:each="i : ${ingredients}" th:value="${i.id}" th:text="${i.name} + ', ' + ${i.getMeasureUnit()}"></option>
                             </select>
                         </td>
-                        <td>
-                            <input type="number" step="0.5" min="0" placeholder="kiekis">
+                        <td th:object="${tempRecipeIngredient}">
+                            <input type="number" th:field="*{amount}" step="0.5" min="0"  placeholder="kiekis">
                         </td>
                     </tr>
                 </table>
-                <button class="btn btn-sm btn-primary btn-block" name="Submit" type="button" th:text="Pridėti"></button>
-            </form>
+                <button class="btn btn-sm btn-primary btn-block" name="Submit" type="Submit" th:formaction="@{/admin/recipeCreate}" th:text="Pridėti"></button>
+            </div>
 
-            <button class="btn btn-sm btn-primary btn-block" name="Submit" type="Submit" th:text="Sukurti"></button>
+            <button class="btn btn-sm btn-primary btn-block" name="Submit" type="Submit"  th:text="Sukurti"></button>
 
         </form>
 

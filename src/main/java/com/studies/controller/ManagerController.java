@@ -30,6 +30,8 @@ public class ManagerController {
     RecipeService rService;
     @Autowired
     RecipeIngredientService riService;
+
+    private List<RecipeIngredient> recipeIngredients = new ArrayList<>();
     
     @RequestMapping(value="/admin/userlist", method = RequestMethod.GET)
     public ModelAndView openUserList(){
@@ -69,13 +71,6 @@ public class ManagerController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         RegisteredUser user = rUserService.findUserByUsername(auth.getName());
         List<Ingredient> ingredients = iService.getIngredients();
-        List<RecipeIngredient> recipeIngredients = new ArrayList<>();
-        RecipeIngredient r = new RecipeIngredient();
-        r.setAmount(20.5);
-        r.setIngredientId(Long.parseLong("2"));
-        r.setRecipeId(Long.parseLong("4"));
-        recipeIngredients.add(r);
-
 
         modelAndView.addObject("categories", Category.values());
         modelAndView.addObject("ingredients", ingredients);
@@ -85,6 +80,26 @@ public class ManagerController {
         modelAndView.addObject("userLevel", user.getUserLevel());
         modelAndView.addObject("userName", "Welcome " + user.getFirstName() + " " + user.getLastName() + " (" + user.getEmail() + ")");
         modelAndView.setViewName("admin/recipeCreate");
+        return modelAndView;
+    }
+
+    @RequestMapping(value="/admin/recipeCreate", method = RequestMethod.POST)
+    public ModelAndView addRecipeIngredient(@Valid RecipeIngredient tempRecipeIngredient, Recipe recipe, BindingResult bindingResult){
+        ModelAndView modelAndView = null;
+        modelAndView = recipeCreate();
+        if (!bindingResult.hasErrors()){
+            if(tempRecipeIngredient.getAmount() != null){
+                recipeIngredients.add(tempRecipeIngredient);
+                modelAndView.addObject("actionMessage", "Ingredientas pridėtas");
+            }
+            else{
+                modelAndView.addObject("actionMessage", "Ingredientas nepridėtas");
+            }
+        }
+        else{
+            modelAndView.addObject("actionMessage", "Ingredientas nepridėtas");
+        }
+
         return modelAndView;
     }
     
@@ -134,12 +149,20 @@ public class ManagerController {
         ModelAndView recipeListModel = null;
         if (!bindingResult.hasErrors()){
             rService.saveRecipe(recipe);
+            List<Recipe> recipes = rService.getRecipes();
+            Long id = recipes.get(recipes.size() - 1).getId();
+
+            for (RecipeIngredient ri : recipeIngredients){
+                ri.setRecipeId(id);
+                riService.saveRecipeIngredient(ri);
+            }
+            recipeIngredients = new ArrayList<>();
             recipeListModel = recipeCreate();
-            recipeListModel.addObject("actionMessage", "Receptas pridėtas");
+            recipeListModel.addObject("RecipeActionMessage", "Receptas pridėtas");
         }
         else{
             recipeListModel = recipeCreate();
-            recipeListModel.addObject("actionMessage", "Receptas nesukurtas");
+            recipeListModel.addObject("RecipeActionMessage", "Receptas nesukurtas");
         }
         return recipeListModel;
     }

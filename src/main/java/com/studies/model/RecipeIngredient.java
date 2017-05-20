@@ -1,8 +1,10 @@
 package com.studies.model;
 
+import com.studies.service.RecipeIngredientService;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 /**
@@ -13,19 +15,19 @@ import javax.validation.constraints.Pattern;
 @Table(name = "recipeIngredient")
 public class RecipeIngredient {
     @Id
-    @Pattern(regexp = "([0-9]*)", message = "Laukas turi būti sudarytas tik iš skaičių")
-    @NotEmpty(message = "*Neįvestas recepto ID")
+    //@Pattern(regexp = "([0-9]*)", message = "Laukas turi būti sudarytas tik iš skaičių")
+    //@NotEmpty(message = "*Neįvestas recepto ID")
     @Column(name = "recipe_id")
     private Long recipeId;
 
     @Id
-    @Pattern(regexp = "([0-9]*)", message = "Laukas turi būti sudarytas tik iš skaičių")
-    @NotEmpty(message = "*Neįvestas ingrediento ID")
+    //@Pattern(regexp = "([0-9]*)", message = "Laukas turi būti sudarytas tik iš skaičių")
+    //@NotEmpty(message = "*Neįvestas ingrediento ID")
     @Column(name = "ingredient_id")
     private Long ingredientId;
 
-    @Pattern(regexp = "([0-9]*)", message = "Laukas turi būti sudarytas tik iš skaičių")
-    @NotEmpty(message = "*Neįvestas kiekis")
+    //@Pattern(regexp = "([0-9]*)", message = "Laukas turi būti sudarytas tik iš skaičių")
+    //@NotEmpty(message = "*Neįvestas kiekis")
     @Column(name = "amount")
     private Double amount;
 
@@ -52,4 +54,5 @@ public class RecipeIngredient {
     public void setAmount(Double amount) {
         this.amount = amount;
     }
+
 }

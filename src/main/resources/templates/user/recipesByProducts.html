@@ -13,7 +13,7 @@
 <body>
 <div class="container">
     <table th:replace="include/menu :: menu"></table>
-    <div style="margin-top:40px;font-size:25px">Receptai pagal poduktus</div>
+    <div style="margin-top:40px;font-size:25px">Receptai pagal produktus</div>
     <form method="get">
         <table id="t02" th:each="i : ${recipes}">
             <h4 th:text="${i.name}"></h4>
