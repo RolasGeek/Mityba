@@ -13,7 +13,13 @@ public class RecipeIngredientServiceImpl implements RecipeIngredientService {
     private RecipeIngredientRepository recipeIngredientRepository;
 
     @Override
-    public List<RecipeIngredient> findRecipeIngredientsByRecipeId(Long id) {return recipeIngredientRepository.findAllByRecipeId(id);}
+    public List<RecipeIngredient> findRecipeIngredientsByRecipeId(Long id) {
+        return recipeIngredientRepository.findAllByRecipeId(id);}
+
+    @Override
+    public List<RecipeIngredient> findRecipeIngredientsByIngredientId(Long id) {
+        return recipeIngredientRepository.findAllByIngredientId(id);
+    }
 
     @Override
     public void saveRecipeIngredient (RecipeIngredient recipeIngredient) {recipeIngredientRepository.save(recipeIngredient);}

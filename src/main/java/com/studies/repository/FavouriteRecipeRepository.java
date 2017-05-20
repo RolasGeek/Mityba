@@ -9,5 +9,6 @@ import java.util.List;
 @Repository("favouriteRecipeRepository")
 public interface FavouriteRecipeRepository extends JpaRepository<FavouriteRecipe, Long> {
     List<FavouriteRecipe> findAll();
-    FavouriteRecipe findById(Long id);
+    List<FavouriteRecipe> findAllByUsername(String username);
+    List<FavouriteRecipe> findAllByRecipeId(Long id);
 }

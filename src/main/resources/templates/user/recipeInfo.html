@@ -15,7 +15,7 @@
     <table th:replace="include/menu :: menu"></table>
     <span th:utext="${actionMessage}" style="color:red"></span>
     <h3 th:text="${recipe.name}"></h3>
-    <form action="#" th:action="@{/user/productInput}" th:object="${ingredient}" method="post" role="form">
+    <form action="#" th:action="@{${'/user/recipeInfo/like' + recipe.id}}" th:object="${frecipe}" method="post" role="form">
         <fieldset style="margin-right: 600px; ">
             <br>
             <img th:with="link=${'/image/' + recipe.id}" th:src="@{${link}}" />
@@ -37,10 +37,12 @@
             <h4>Paruošimas</h4>
             <p th:text="${recipe.description}"></p>
             <br>
-            <input type="submit" value="Gauti produktų sąrašą">
-            <input type="submit" value="Mėgti">
+            <a href="/user/recipeInfo/like/${recipe.id}" th:href="@{${'/user/recipeInfo/like/' + recipe.id}}" class="btn btn-large btn-success">Mėgti</a>
+            <a href="/user/productList/${recipe.id}" th:href="@{${'/user/productList/' + recipe.id}}" class="btn btn-large btn-success">Gauti trūkstamų produktų sąrašą</a>
+            <!--<input type="submit" value="Mėgti">-->
         </fieldset>
     </form>
+
     <!--<button onclick="location.href = 'http://localhost:8080/user/home';" id="myButton" class="float-left submit-button" >Home</button>-->
 </div>
 </body>

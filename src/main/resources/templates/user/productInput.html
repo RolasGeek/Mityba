@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <!--<script type="text/javascript" th:src="@{/js/addRow.js}"></script>-->
 </head>
 
 <body>
@@ -16,9 +15,23 @@
         <div th:replace="include/menu :: menu"></div>
         <div style="margin-top:40px;font-size:25px">Produktai:</div>
         <span th:utext="${actionMessage}" style="color:red"></span>
+        <table id="t02" width="20%" >
+            <tr th:each="i : ${ilist}">
+                <td th:text="${i.name}" readonly></td>
+                <td th:each="u : ${uilist}"
+                    th:if="${u.ingredientId} == ${i.id}" th:text="${u.amount}" readonly>
+                </td>
+            </tr>
+            <tr>
+                <th>Pavadinimas</th>
+                <th>Kiekis</th>
+                <th>Matavimo vienetas</th>
+            </tr>
+        </table>
         <table id="t02" width="350px" border="1">
             <tr>
                 <form action="#" th:action="@{/user/productInput}" th:object="${ingredient}" method="post" role="form">
+
                     <td>
                         <select type="text" name="txt" th:field="*{name}">
                             <option th:each="u : ${ingredients}" th:value="${u.name}" th:text="${u.name}+ ', ' + ${u.measureUnit}"></option>
@@ -27,7 +40,7 @@
                     <td th:object="${uingredient}" method="post" >
                         <input type="text" th:field="*{amount}" placeholder="kiekis">
                     </td>
-                    <td><button class="btn btn-sm btn-primary btn-block" name="Submit" type="Submit" th:text="Gauti"></button></td>
+                    <td><button class="btn btn-sm btn-primary btn-block" name="Submit" type="Submit" th:text="Pridėti"></button></td>
                 </form>
             </tr>
         </table>

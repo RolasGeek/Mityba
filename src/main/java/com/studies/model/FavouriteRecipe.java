@@ -3,26 +3,17 @@ package com.studies.model;
 import javax.persistence.*;
 
 @Entity
+@IdClass(value = FavouriteRecipetKey.class)
 @Table(name = "favouriteRecipe")
 public class FavouriteRecipe {
-    @Id
-    @GeneratedValue
-    @Column(name = "id")
-    private Long id;
 
+    @Id
     @Column(name = "username")
     private String username;
 
-    @Column(name = "recipename")
-    private String recipename;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+    @Id
+    @Column(name = "recipeId")
+    private Long recipeId;
 
     public String getUsername() {
         return username;
@@ -32,11 +23,11 @@ public class FavouriteRecipe {
         this.username = username;
     }
 
-    public String getRecipename() {
-        return recipename;
+    public Long getRecipeId() {
+        return recipeId;
     }
 
-    public void setRecipename(String recipename) {
-        this.recipename = recipename;
+    public void setRecipeId(Long recipeId) {
+        this.recipeId = recipeId;
     }
 }

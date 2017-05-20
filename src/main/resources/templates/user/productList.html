@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>User List</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/admin/userlist.css}" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+<div class="container">
+    <div th:replace="include/menu :: menu"></div>
+    <div style="margin-top:40px;font-size:25px">Trūkstami produktai</div>
+    <span th:utext="${actionMessage}" style="color:red"></span>
+    <table id="t02" width="50%" >
+        <tr>
+            <th>Pavadinimas</th>
+            <th>Suma</th>
+            <th>Matavimo vienetas</th>
+        </tr>
+        <tr th:each="i : ${ingredients}">
+            <td th:text="${i.name}"></td>
+            <td th:each="u : ${amounts}"
+                th:if="${u.ingredientId} == ${i.id}" th:text="${u.amount}"></td>
+            <td th:text="${i.measureUnit}"></td>
+        </tr>
+    </table>
+    <div th:replace="include/footer :: footer"></div>
+</div>
+</body>
+</html>
