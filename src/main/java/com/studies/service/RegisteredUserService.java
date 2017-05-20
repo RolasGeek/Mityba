@@ -8,4 +8,5 @@ public interface RegisteredUserService {
     public void saveUser(RegisteredUser user);
     public void removeUser(RegisteredUser user);
     public List<RegisteredUser> getUsers();
+    public void updateUser(RegisteredUser user);
 }

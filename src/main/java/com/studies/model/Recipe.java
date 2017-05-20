@@ -18,12 +18,12 @@ public class Recipe {
     @Column(name = "id")
     private Long id;
 
-    @Pattern(regexp = "([a-zA-Z0-9]*)", message = "Laukas turi būti sudarytas tik iš raidžių ir skaičių")
+    //@Pattern(regexp = "([a-zA-Z0-9]*)", message = "Laukas turi būti sudarytas tik iš raidžių ir skaičių")
     @NotEmpty(message = "*Neįvestas recepto pavadinimas")
     @Column(name = "name")
     private String name;
 
-    @Pattern(regexp = "([a-zA-Z0-9]*)", message = "Laukas turi būti sudarytas tik iš raidžių ir skaičių")
+    //@Pattern(regexp = "([a-zA-Z0-9]*)", message = "Laukas turi būti sudarytas tik iš raidžių ir skaičių")
     @NotEmpty(message = "*Neįvestas recepto aprašymas")
     @Column(name = "description")
     private String description;

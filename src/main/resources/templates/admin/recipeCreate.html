@@ -15,25 +15,17 @@
     <div th:replace="include/menu :: menu"></div>
     <div style="margin-top:40px;font-size:25px">Recepto sukūrimas:</div>
     <span th:utext="${RecipeActionMessage}" style="color:red"></span>
-
-
-        <form action="#" th:action="@{/admin/createRecipe}" method="post" role="form">
-
+        <form action="#" th:action="@{/admin/createRecipe}" method="post" enctype="multipart/form-data" role="form">
             <input type="text" th:field="*{recipe.name}" placeholder="pavadinimas">
-
             <select th:field="*{recipe.category}">
                 <option th:each="c : ${categories}" th:value="${c.name}" th:text="${c.name}"></option>
             </select>
-
             <input type="number" step="5" min="0" th:field="*{recipe.cooking_time}" placeholder="gaminimo laikas">
-
             <input type="text" th:field="*{recipe.description}" placeholder="aprašymas">
-
             <input type="number" min="0" th:field="*{recipe.number_of_servings}" placeholder="porcijų skaičius">
-
+            <input type="file" accept=".jpg, .png" name="randomMagic">
             <br>
             <br>
-
             <span th:utext="${actionMessage}" style="color:red"></span>
             <div th:object="${recipe}" method="post" th:action="@{/admin/recipeCreate}">
                 <table>
@@ -41,17 +33,10 @@
                         <th>Ingredientas</th>
                         <th>Kiekis</th>
                     </tr>
-
                     <tr th:each="r : ${recipeIngredients}">
-                        <td>
-                            <input th:value="${r.ingredientId}" readonly>
-                        </td>
-                        <td>
-                            <input type="number" step="0.5" min="0" th:value="${r.amount}" readonly>
-                        </td>
+                        <td><input th:value="${r.ingredientId}" readonly></td>
+                        <td><input type="number" step="0.5" min="0" th:value="${r.amount}" readonly></td>
                     </tr>
-
-
                     <tr th:object="${tempRecipeIngredient}">
                         <td>
                             <select th:field="*{ingredientId}">
@@ -65,83 +50,9 @@
                 </table>
                 <button class="btn btn-sm btn-primary btn-block" name="Submit" type="Submit" th:formaction="@{/admin/recipeCreate}" th:text="Pridėti"></button>
             </div>
-
             <button class="btn btn-sm btn-primary btn-block" name="Submit" type="Submit"  th:text="Sukurti"></button>
-
         </form>
-
-    <br>
-    <br>
-    <br>
-
     <div th:replace="include/footer :: footer"></div>
 </div>
-
-<script th:inline="javascript">
-
-    function validateAndAddRow(tableID){
-        var table = document.getElementById(tableID);
-        var rowCount = table.rows.length;
-
-        var ingredientId = table.rows[rowCount - 1].cells[0].children[0].value;
-        var ingredientAmount = table.rows[rowCount - 1].cells[1].children[0].value;
-
-        if (ingredientAmount == "" || ingredientId == ""){
-            alert("Tuščios reikšmės rastos! \nUžpildykite visus laukus");
-        }
-        else{
-            //TODO: padaryti kad pildytu thymeleaf kintamaji- list.add
-
-            /*<![CDATA[*/
-
-            alert(ingredientId);
-
-            var iId = ingredientId;
-            var a = ingredientAmount;
-            [[${tempRecipeIngredient.ingredientId} = iId]];
-            [[${tempRecipeIngredient.amount = a}]];
-            [[${tempRecipeIngredient.recipeId = 0}]];
-
-            var t = [[${tempRecipeIngredient.getIngredientId()}]];
-            var b = [[${tempRecipeIngredient.getAmount()}]];
-
-            alert(t);
-            alert(b);
-            /*]]>*/
-
-            addRow(tableID);
-        }
-    }
-
-</script>
-
-<script th:inline="javascript">
-
-    function addRow(tableID) {
-
-        var table = document.getElementById(tableID);
-
-        var rowCount = table.rows.length;
-        var row = table.insertRow(rowCount);
-
-        var colCount = table.rows[1].cells.length;
-
-        for(var i=0; i<colCount; i++) {
-
-            var newcell	= row.insertCell(i);
-
-            newcell.innerHTML = table.rows[1].cells[i].innerHTML;
-            //alert(newcell.childNodes);
-            switch(newcell.childNodes[1].type) {
-                case "text":
-                    newcell.childNodes[1].value = "";
-                    break;
-                case "select-one":
-                    newcell.childNodes[1].selectedIndex = 0;
-                    break;
-            }
-        }
-    }
-</script>
 </body>
 </html>

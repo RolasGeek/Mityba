@@ -28,6 +28,11 @@ public class RegisteredUserServiceImpl implements RegisteredUserService {
         user.setUserLevel(1);
         userRep.save(user);
     }
+
+    @Override
+    public void updateUser(RegisteredUser user){
+        userRep.save(user);
+    }
     
     @Override
     public void removeUser(RegisteredUser user) {

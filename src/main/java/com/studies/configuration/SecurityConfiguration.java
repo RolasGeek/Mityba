@@ -56,6 +56,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers("/passreset").anonymous()
 				.antMatchers("/passresetconfirm").anonymous()
 				.antMatchers("/home").permitAll()
+				.antMatchers("/activeUser/**").hasAnyAuthority("0","1").anyRequest().permitAll()
 				.antMatchers("/admin/**").hasAuthority("1").anyRequest()
 				.authenticated().and().csrf().disable().formLogin()
 				.loginPage("/login").failureUrl("/login?error=true")

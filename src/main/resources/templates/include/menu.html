@@ -21,9 +21,13 @@
      <div th:if="${userLevel == 1}" class="inner" style="display:inline-block"><form th:action="@{/passreset}" method="get">
         <button class="btn btn-md btn-info" name="passreset"
             type="Submit">Slaptažodžio keitimas</button>
-    </form>
+     </form></div>
+     <div th:if="${userLevel != -1}" class="inner" style="display:inline-block"><form th:action="@{/activeUser/userEdit}" method="get">
+         <button class="btn btn-md btn-info" name="userEdit"
+                 type="Submit">Keisti profilį</button>
+     </form></div>
 
-    </div>
+
     <div th:if="${userLevel == 1}" class="inner" style="display:inline-block"><form th:action="@{/admin/userlist}" method="get">
         <button class="btn btn-md btn-info" name="userlist"
             type="Submit">Vartotojai</button>

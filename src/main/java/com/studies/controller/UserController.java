@@ -61,7 +61,7 @@ public class UserController {
         Recipe r = rService.findRecipeById(imageId);
         byte[] imageContent = r.getImage();
         final HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.IMAGE_PNG);
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
         return new ResponseEntity<>(imageContent, headers, HttpStatus.OK);
     }
 

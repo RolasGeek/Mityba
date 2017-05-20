@@ -7,6 +7,7 @@ import com.studies.service.RecipeService;
 import com.studies.service.RegisteredUserService;
 import com.studies.service.IngredientService;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.validation.Valid;
@@ -18,6 +19,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -71,7 +73,7 @@ public class ManagerController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         RegisteredUser user = rUserService.findUserByUsername(auth.getName());
         List<Ingredient> ingredients = iService.getIngredients();
-
+        RecipeIngredient r = new RecipeIngredient();
         modelAndView.addObject("categories", Category.values());
         modelAndView.addObject("ingredients", ingredients);
         modelAndView.addObject("recipe", new Recipe());
@@ -84,22 +86,21 @@ public class ManagerController {
     }
 
     @RequestMapping(value="/admin/recipeCreate", method = RequestMethod.POST)
-    public ModelAndView addRecipeIngredient(@Valid RecipeIngredient tempRecipeIngredient, Recipe recipe, BindingResult bindingResult){
-        ModelAndView modelAndView = null;
-        modelAndView = recipeCreate();
-        if (!bindingResult.hasErrors()){
-            if(tempRecipeIngredient.getAmount() != null){
-                recipeIngredients.add(tempRecipeIngredient);
-                modelAndView.addObject("actionMessage", "Ingredientas pridėtas");
-            }
-            else{
-                modelAndView.addObject("actionMessage", "Ingredientas nepridėtas");
+    public ModelAndView addRecipeIngredient(@Valid RecipeIngredient tempRecipeIngredient, Recipe recipe, BindingResult bindingResult) {
+        ModelAndView modelAndView = recipeCreate();
+        if (!bindingResult.hasErrors()) {
+            if (tempRecipeIngredient.getAmount() != null) {
+                if (!ingredientExistsInRecipeIngredientList(tempRecipeIngredient)) {
+                    recipeIngredients.add(tempRecipeIngredient);
+                    modelAndView.addObject("actionMessage", "Ingredientas pridėtas");
+                    return modelAndView;
+                } else {
+                    modelAndView.addObject("actionMessage", "Toks ingredientas jau yra sąraše!");
+                    return modelAndView;
+                }
             }
         }
-        else{
-            modelAndView.addObject("actionMessage", "Ingredientas nepridėtas");
-        }
-
+        modelAndView.addObject("actionMessage", "Ingredientas nepridėtas");
         return modelAndView;
     }
     
@@ -145,9 +146,12 @@ public class ManagerController {
 
     // recepto sukurimas
     @RequestMapping(value="/admin/createRecipe", method = RequestMethod.POST)
-    public ModelAndView createRecipe(@Valid Recipe recipe, BindingResult bindingResult){
+    public ModelAndView createRecipe(@Valid Recipe recipe,
+                                     BindingResult bindingResult,
+                                     @RequestParam("randomMagic")MultipartFile multipartFile) throws IOException {
         ModelAndView recipeListModel = null;
-        if (!bindingResult.hasErrors()){
+        if (!bindingResult.hasErrors() && recipeIngredients.size() > 0){
+            recipe.setImage(multipartFile.getBytes());
             rService.saveRecipe(recipe);
             List<Recipe> recipes = rService.getRecipes();
             Long id = recipes.get(recipes.size() - 1).getId();
@@ -165,6 +169,15 @@ public class ManagerController {
             recipeListModel.addObject("RecipeActionMessage", "Receptas nesukurtas");
         }
         return recipeListModel;
+    }
+
+    private boolean ingredientExistsInRecipeIngredientList(RecipeIngredient r){
+        for (RecipeIngredient ri : recipeIngredients) {
+            if (ri.getIngredientId() == r.getIngredientId()) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

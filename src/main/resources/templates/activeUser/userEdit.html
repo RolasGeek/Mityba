@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Keisti vartotojo duomenis</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/admin/home.css}" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+<div class="container" th:if="@{userLevel != -1}">
+    <table th:replace="include/menu :: menu"></table>
+    <div style="margin-top:40px;font-size:25px">Vartotojo duomenys:</div>
+    <span th:utext="${actionMessage}" style="color:red"></span>
+        <form action="#" th:action="@{/activeUser/editUserInfo/1}" th:object="${user}" method="post" role="form">
+            <table id="t02" border="1" style="width:50%;text-align: center;">
+                <tr>
+                    <th>El. Paštas</th>
+                    <th>Vardas</th>
+                    <th>Pavardė</th>
+                </tr>
+                <tr>
+                    <td><input th:field="*{email}" th:value="*{email}"></td>
+                    <td><input th:field="*{firstName}" th:value="*{firstName}"></td>
+                    <td><input th:field="*{lastName}" th:value="*{lastName}"></td>
+                </tr>
+                <input type="hidden" th:field="*{username}">
+                <input type="hidden" th:field="*{active}">
+                <input type="hidden" th:field="*{password}">
+                <input type="hidden" th:field="*{userLevel}">
+            </table>
+            <button class="btn btn-sm btn-primary btn-block" name="Submit" type="Submit" th:text="Atnaujinti_duomenis"></button>
+        </form>
+    <div style="margin-top:40px;font-size:25px">Slaptažodžio keitimas:</div>
+    <span th:utext="${actionPasswordMessage}" style="color:red"></span>
+    <form action="#" th:action="@{/activeUser/editUserInfo/2}" th:object="${user}" method="post" role="form">
+        <table id="t02" border="1" style="width:50%;text-align: center;">
+            <tr>
+                <th>Dabartinis slaptažodis</th>
+                <th>Naujas slaptažodis</th>
+                <th>Pakartoti slaptažodį</th>
+            </tr>
+            <tr>
+                <td><input type="password" name="currentPassword"></td>
+                <td><input type="password" name="newPassword"></td>
+                <td><input type="password" name="repeatPassword"></td>
+            </tr>
+            <input type="hidden" th:field="*{email}">
+            <input type="hidden" th:field="*{firstName}">
+            <input type="hidden" th:field="*{lastName}">
+            <input type="hidden" th:field="*{username}">
+            <input type="hidden" th:field="*{active}">
+            <input type="hidden" th:field="*{password}">
+            <input type="hidden" th:field="*{userLevel}">
+        </table>
+        <button class="btn btn-sm btn-primary btn-block" name="Submit" type="Submit" th:text="Atnaujinti_slaptažodį"></button>
+    </form>
+    <div th:replace="include/footer :: footer"></div>
+</div>
+</body>
+</html>
