@@ -5,7 +5,7 @@
     </form></div>
      <div class="inner" style="display:inline-block"><form th:action="@{/passreset}" method="get">
         <button class="btn btn-md btn-info" name="passreset"
-            type="Submit">Slaptaþodþio keitimas</button>
+            type="Submit">Slaptaï¿½odï¿½io keitimas</button>
     </form>
     </div>
     <!-- TODO: pakeisti, kad nerodytu mygtuku vartojams kurie neturi prieigos -->
@@ -26,6 +26,22 @@
     <div class="inner" style="display:inline-block;float:right"><form th:action="@{/logout}" method="get">
         <button class="btn btn-md btn-danger" name="registration"
             type="Submit">Atsijungti</button>
+    </form></div>
+    <div class="inner" style="display:inline-block"><form th:action="@{/user/productInput}" method="get">
+        <button class="btn btn-md btn-info" name="recipesbyproducts"
+                type="Submit">Receptai pagal produktus</button>
+    </form></div>
+    <div class="inner" style="display:inline-block"><form th:action="@{/user/recipesByPopularity}" method="get">
+        <button class="btn btn-md btn-info" name="recipesbypopularity"
+                type="Submit">Populiariausi receptai</button>
+    </form></div>
+    <div class="inner" style="display:inline-block"><form th:action="@{/user/recipesByNewness}" method="get">
+        <button class="btn btn-md btn-info" name="recipesbynewness"
+                type="Submit">Naujausi receptai</button>
+    </form></div>
+    <div class="inner" style="display:inline-block;float:right"><form th:action="@{/login}" method="get">
+        <button class="btn btn-md btn-danger" name="login"
+                type="Submit">Prisijungti</button>
     </form></div>
 
 </div>

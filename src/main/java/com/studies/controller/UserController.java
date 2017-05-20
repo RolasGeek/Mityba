@@ -36,6 +36,7 @@ public class UserController {
     RecipeIngredientService riService;
 
     List<UserIngredient> userIngredients = new ArrayList<>();
+    List<Ingredient> ingredientslist = new ArrayList<>();
 
     @RequestMapping(value={"/user/home"}, method = RequestMethod.GET)
     public ModelAndView showMainMenu() throws IOException {
@@ -66,24 +67,25 @@ public class UserController {
         List<Ingredient> ingredients = iService.getIngredients();
         modelAndView.addObject("ingredients", ingredients);
         modelAndView.addObject("measure", Measure.values());
-        modelAndView.addObject("ingredient", new UserIngredient());
+        modelAndView.addObject("ingredient", new Ingredient());
+        modelAndView.addObject("uingredient", new UserIngredient());
+        magic();
         //------------------------
         modelAndView.setViewName("user/productInput");
         return modelAndView;
     }
     @RequestMapping(value="/user/productInput", method = RequestMethod.POST)
-    public ModelAndView addUserIngredient(@Valid UserIngredient ingredient, BindingResult bindingResult) {
+    public ModelAndView addUserIngredient(@Valid UserIngredient uingredient,Ingredient ingredient,BindingResult bindingResult) {
         ModelAndView userIngredientListModel = null;
-//        List<Ingredient> list = iService.getIngredients();
-//        for (Ingredient ing: list) {
-//            if (ing.getName().equals(ingredient.getName())) {
-//                ingredient.setMeasureUnit(ing.getMeasureUnit());
-//            }
-//        }
         if (!bindingResult.hasErrors()) {
-            userIngredients.add(ingredient);
+         //   uingredient.setIngredientId(ingredient.getId());
+            userIngredients.add(uingredient);
+            ingredientslist.add(ingredient);
             userIngredientListModel = showProductsInput();
             userIngredientListModel.addObject("actionMessage", "Ingredientas pridėtas");
+//            System.out.println("Ingrediento name - "+ingredient.getName());
+//            System.out.println("Ingrediento kiekis - "+uingredient.getAmount());
+           // System.out.println("Ingrediento id - "+ingredient.getId());
         } else {
             userIngredientListModel = showProductsInput();
             userIngredientListModel.addObject("actionMessage", "Ingredientas nesukurtas");
@@ -109,6 +111,24 @@ public class UserController {
         modelAndView.addObject("rIngredients", rIngredients);
         modelAndView.addObject("ingredients", list);
         modelAndView.setViewName("user/recipeInfo");
+        return modelAndView;
+    }
+
+    public void magic(){
+        for (Ingredient i : ingredientslist){
+            System.out.println("Ingrediento name - "+i.getName());
+        }
+    }
+    @RequestMapping(value={"/user/recipesByProducts"}, method = RequestMethod.GET)
+    public ModelAndView showRecipesByProducts() {
+        ModelAndView modelAndView = new ModelAndView();
+        //-------------------------------------------------
+        List<Ingredient> ingredients = iService.getIngredients();
+        List<Recipe> recipes = rService.getRecipes();
+        modelAndView.addObject("recipes", recipes);
+        magic();
+        //------------------------
+        modelAndView.setViewName("user/recipesByProducts");
         return modelAndView;
     }
 }
