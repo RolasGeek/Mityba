@@ -28,8 +28,8 @@ public class Recipe {
     @Column(name = "description")
     private String description;
 
-    @Pattern(regexp = "([0-9]*)", message = "Laukas turi būti sudarytas tik iš skaičių")
-    @NotEmpty(message = "*Neįvestas gaminimo laikas")
+   // @Pattern(regexp = "([0-9]*)", message = "Laukas turi būti sudarytas tik iš skaičių")
+   // @NotEmpty(message = "*Neįvestas gaminimo laikas")
     @Column(name = "cooking_time")
     private Double cooking_time;
 
@@ -38,8 +38,8 @@ public class Recipe {
     @Enumerated(EnumType.STRING)
     private Category category;
 
-    @Pattern(regexp = "([0-9]*)", message = "Laukas turi būti sudarytas tik iš skaičių")
-    @NotEmpty(message = "*Neįvestas porcijų skaičius")
+   // @Pattern(regexp = "([0-9]*)", message = "Laukas turi būti sudarytas tik iš skaičių")
+  //  @NotEmpty(message = "*Neįvestas porcijų skaičius")
     @Column(name = "number_of_servings")
     private Integer number_of_servings;
 

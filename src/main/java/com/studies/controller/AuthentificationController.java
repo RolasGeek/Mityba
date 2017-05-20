@@ -69,6 +69,17 @@ public class AuthentificationController {
         modelAndView.setViewName("admin/home");
         return modelAndView;
     }
+
+    @RequestMapping(value="/activeUser/home", method = RequestMethod.GET)
+    public ModelAndView showActiveUserHome(){
+        ModelAndView modelAndView = new ModelAndView();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        RegisteredUser user = service.findUserByUsername(auth.getName());
+        modelAndView.addObject("userName", "Welcome " + user.getFirstName() + " " + user.getLastName() + " (" + user.getEmail() + ")");
+        modelAndView.addObject("userMessage","Content Available Only for Users with User Role");
+        modelAndView.setViewName("activeUser/home");
+        return modelAndView;
+    }
     
     @RequestMapping(value="/fakelogout", method = RequestMethod.GET )
     public ModelAndView logout(){

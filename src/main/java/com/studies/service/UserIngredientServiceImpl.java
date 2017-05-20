@@ -7,14 +7,19 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service("productService")
+@Service("userIngredientService")
 public class UserIngredientServiceImpl implements UserIngredientService {
     @Autowired
     private UserIngredientRepository userIngredientRep;
 
     @Override
-    public UserIngredient findUserIngredientById(Long id) {
-        return userIngredientRep.findById(id);
+    public List<UserIngredient> findUserIngredientByUsername(String username) {
+        return userIngredientRep.findAllByUsername(username);
+    }
+
+    @Override
+    public List<UserIngredient> findUserIngredientByIngredientId(Long id) {
+        return userIngredientRep.findAllByIngredientId(id);
     }
 
     @Override

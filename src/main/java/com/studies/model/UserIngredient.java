@@ -9,57 +9,43 @@ import javax.validation.constraints.Pattern;
  Vartotojo turimi produktai
  */
 @Entity
+@IdClass(value = UserIngredientKey.class)
 @Table(name = "userIngredient")
+
 public class UserIngredient {
+
     @Id
-    @GeneratedValue
-    @Column(name = "id")
-    private Long id;
+    @Column(name = "ingredientId")
+    private Long ingredientId;
 
-    @Pattern(regexp = "([a-zA-Z0-9]*)", message = "Laukas turi būti sudarytas tik iš raidžių ir skaičių")
-    @NotEmpty(message = "*Neįvestas produkto pavadinimas")
-    @Column(name = "name")
-    private String name;
+    @Id
+    @Column(name = "username")
+    private String username;
 
-   // @Pattern(regexp = "([0-9]*)", message = "Laukas turi būti sudarytas tik iš skaičių")
-  //  @NotEmpty(message = "*Neįvestas produkto kiekis")
     @Column(name = "amount")
     private Double amount;
 
-    @NotNull(message = "*Neįvestas matavimo vienetas")
-    @Column(name = "measure_unit")
-    @Enumerated(EnumType.STRING)
-    private Measure measureUnit;
-
-    public Long getId() {
-        return id;
+    public Long getIngredientId() {
+        return ingredientId;
     }
 
-    public void setId(Long _id) {
-        this.id = _id;
+    public void setIngredientId(Long ingredientId) {
+        this.ingredientId = ingredientId;
     }
 
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
     }
 
-    public void setName(String _name) {
-        this.name = _name;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public Double getAmount() {
         return amount;
     }
 
-    public void setAmount(Double _amount) {
-        this.amount = _amount;
-    }
-
-    public Measure getMeasureUnit() {
-        return measureUnit;
-    }
-
-    public void setMeasureUnit(Measure _measureUnit) {
-        this.measureUnit = _measureUnit;
+    public void setAmount(Double amount) {
+        this.amount = amount;
     }
 }

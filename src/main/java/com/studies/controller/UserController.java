@@ -1,6 +1,6 @@
 package com.studies.controller;
 import com.studies.model.*;
-import com.studies.service.UserIngredientService;
+import com.studies.service.RecipeIngredientService;
 import com.studies.service.RecipeService;
 import com.studies.service.RegisteredUserService;
 import com.studies.service.IngredientService;
@@ -9,7 +9,6 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.sun.org.apache.regexp.internal.RE;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -30,15 +29,13 @@ import javax.validation.Valid;
 @Controller
 public class UserController {
     @Autowired
-    RegisteredUserService rUserService;
-    @Autowired
     RecipeService rService;
     @Autowired
-    UserIngredientService pService;
-    @Autowired
     IngredientService iService;
+    @Autowired
+    RecipeIngredientService riService;
 
-
+    List<UserIngredient> userIngredients = new ArrayList<>();
 
     @RequestMapping(value={"/user/home"}, method = RequestMethod.GET)
     public ModelAndView showMainMenu() throws IOException {
@@ -46,6 +43,7 @@ public class UserController {
         //-------------------------------------------------
         List<Recipe> recipes = rService.getRecipes();
         modelAndView.addObject("recipes", recipes);
+        modelAndView.addObject("recipe", new Recipe());
         //------------------------
         modelAndView.setViewName("user/home");
         return modelAndView;
@@ -58,8 +56,9 @@ public class UserController {
         byte[] imageContent = r.getImage();
         final HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.IMAGE_PNG);
-        return new ResponseEntity<byte[]>(imageContent, headers, HttpStatus.OK);
+        return new ResponseEntity<>(imageContent, headers, HttpStatus.OK);
     }
+
     @RequestMapping(value={"/user/productInput"}, method = RequestMethod.GET)
     public ModelAndView showProductsInput() {
         ModelAndView modelAndView = new ModelAndView();
@@ -75,10 +74,13 @@ public class UserController {
     @RequestMapping(value="/user/productInput", method = RequestMethod.POST)
     public ModelAndView addUserIngredient(@Valid UserIngredient ingredient, BindingResult bindingResult) {
         ModelAndView userIngredientListModel = null;
-        List<UserIngredient> userIngredients = new ArrayList<>();
-
+//        List<Ingredient> list = iService.getIngredients();
+//        for (Ingredient ing: list) {
+//            if (ing.getName().equals(ingredient.getName())) {
+//                ingredient.setMeasureUnit(ing.getMeasureUnit());
+//            }
+//        }
         if (!bindingResult.hasErrors()) {
-            //pService.saveUserIngredient(ingredient);
             userIngredients.add(ingredient);
             userIngredientListModel = showProductsInput();
             userIngredientListModel.addObject("actionMessage", "Ingredientas pridėtas");
@@ -86,7 +88,27 @@ public class UserController {
             userIngredientListModel = showProductsInput();
             userIngredientListModel.addObject("actionMessage", "Ingredientas nesukurtas");
         }
-        System.out.println("LISTAS"+userIngredients.get(0).getName());
         return userIngredientListModel;
+    }
+
+    @RequestMapping(value = "/user/recipeInfo/{recipe_id}", method = RequestMethod.GET)
+    public ModelAndView tsss(@PathVariable("recipe_id") Long recipeId) {
+        ModelAndView modelAndView = new ModelAndView();
+        Recipe r = rService.findRecipeById(recipeId);
+        List<RecipeIngredient> rIngredients = riService.findRecipeIngredientsByRecipeId(recipeId);
+        List<Ingredient> list = new ArrayList<>();
+        List<Ingredient> listOfIngredients = iService.getIngredients();
+        for (RecipeIngredient recipeI : rIngredients){
+            for(Ingredient ing : listOfIngredients) {
+                if (recipeI.getIngredientId().equals(ing.getId())) {
+                    list.add(ing);
+                }
+            }
+        }
+        modelAndView.addObject("recipe", r);
+        modelAndView.addObject("rIngredients", rIngredients);
+        modelAndView.addObject("ingredients", list);
+        modelAndView.setViewName("user/recipeInfo");
+        return modelAndView;
     }
 }

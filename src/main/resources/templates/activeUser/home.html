@@ -13,15 +13,19 @@
 <body>
     <div class="container">
         <table th:replace="include/userMenu :: menu"></table>
+        <div style="margin-top:40px;font-size:25px">MainMenu</div>
+        <div style="margin-top:40px;font-size:25px">Receptas:</div>
         <span th:utext="${actionMessage}" style="color:red"></span>
-        <form action="#" th:action="@{/user/recipeInfo}" th:object="${recipe}" method="post" role="form">
-        <table id="t02" th:each="i : ${recipes}">
-            <h4 th:text="${i.name}"></h4>
-            <tr><a th:href="@{${'/user/recipeInfo/' + i.id}}">
-                <img style="width: 30%" th:with="link=${'/image/' + i.id}" th:src="@{${link}}" /></a>
+        <table id="t02">
+            <tr>
+                <th>Pavadinimas  </th>
+                <th>Magic</th>
+            </tr>
+            <tr th:each="i : ${recipes}">
+                <td th:text="${i.name}"></td>
+                <td><a th:href="@{productInput}"> <img th:with="link=${'/image/' + i.id}" th:src="@{${link}}" /></a></td>
             </tr>
         </table>
-        </form>
     </div>
 </body>
 </html>

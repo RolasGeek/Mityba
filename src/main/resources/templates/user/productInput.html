@@ -18,24 +18,19 @@
         <span th:utext="${actionMessage}" style="color:red"></span>
         <input type="button" value="Add Row" onclick="addRow('t02')" />
         <table id="t02" width="350px" border="1">
-            <tr>
-                <form action="#" th:action="@{/user/productInput}" th:object="${ingredient}" method="post" role="form">
-                    <td>
-                        <select type="text" name="txt" th:field="*{name}">
-                            <option th:each="u : ${ingredients}" th:value="${u.name}" th:text="${u.name}"></option>
-                        </select>
-                    </td>
-                    <td>
-                        <input type="text" th:field="*{amount}" placeholder="kiekis">
-                    </td>
-                    <td>
-                        <select name="country" th:field="*{measureUnit}">
-                            <option th:each="i : ${measure}" th:value="${i.name}" th:text="${i.name}"></option>
-                        </select>
-                    </td>
-                    <td><button class="btn btn-sm btn-primary btn-block" name="Submit" type="Submit" th:text="Gauti"></button></td>
-                </form>
-            </tr>
+            <!--<tr>-->
+                <!--<form action="#" th:action="@{/user/productInput}" th:object="${ingredient}" method="post" role="form">-->
+                    <!--<td>-->
+                        <!--<select type="text" name="txt" th:field="*{name}">-->
+                            <!--<option th:each="u : ${ingredients}" th:value="${u.name}" th:text="${u.name}+ ', ' + ${u.measureUnit}"></option>-->
+                        <!--</select>-->
+                    <!--</td>-->
+                    <!--<td>-->
+                        <!--<input type="text" th:field="*{amount}" placeholder="kiekis">-->
+                    <!--</td>-->
+                    <!--<td><button class="btn btn-sm btn-primary btn-block" name="Submit" type="Submit" th:text="Gauti"></button></td>-->
+                <!--</form>-->
+            <!--</tr>-->
         </table>
 
     </div>
