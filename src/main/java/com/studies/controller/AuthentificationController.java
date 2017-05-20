@@ -2,6 +2,8 @@ package com.studies.controller;
 
 import javax.validation.Valid;
 
+import com.studies.model.Recipe;
+import com.studies.service.RecipeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,15 +19,19 @@ import org.springframework.web.servlet.ModelAndView;
 import com.studies.model.RegisteredUser;
 import com.studies.service.RegisteredUserService;
 
+import java.util.List;
+
 @Controller
 public class AuthentificationController {
     @Autowired
     RegisteredUserService service;
-    
+    @Autowired
+    RecipeService rService;
+
     @Autowired
     private BCryptPasswordEncoder encoder;
 
-    @RequestMapping(value={"/", "/login"}, method = RequestMethod.GET)
+    @RequestMapping(value="/login", method = RequestMethod.GET)
     public ModelAndView login(){
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("auth/login");
@@ -60,13 +66,43 @@ public class AuthentificationController {
     }
 
     @RequestMapping(value="/admin/home", method = RequestMethod.GET)
-    public ModelAndView home(){
+    public ModelAndView adminHome(){
         ModelAndView modelAndView = new ModelAndView();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         RegisteredUser user = service.findUserByUsername(auth.getName());
         modelAndView.addObject("userName", "Welcome " + user.getFirstName() + " " + user.getLastName() + " (" + user.getEmail() + ")");
         modelAndView.addObject("userMessage","Content Available Only for Users with Admin Role");
         modelAndView.setViewName("admin/home");
+        return modelAndView;
+    }
+
+    @RequestMapping(value={"/", "/home"}, method = RequestMethod.GET)
+    public ModelAndView home(){
+        ModelAndView modelAndView = new ModelAndView();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        RegisteredUser user = service.findUserByUsername(auth.getName());
+
+        List<Recipe> recipes = rService.getRecipes();
+        modelAndView.addObject("recipes", recipes);
+        modelAndView.addObject("recipe", new Recipe());
+
+        if (user != null){
+            modelAndView.addObject("userName", "Welcome " + user.getFirstName() + " " + user.getLastName() + " (" + user.getEmail() + ")");
+            modelAndView.addObject("userLevel", user.getUserLevel());
+
+            if (user.getUserLevel() == 1){
+                modelAndView.addObject("userMessage","Content Available Only for Users with Admin Role");
+            }
+            else{
+                modelAndView.addObject("userMessage", "Simple user");
+            }
+        }
+        else{
+            modelAndView.addObject("userLevel", -1);
+            modelAndView.addObject("userMessage", "Unregistered user");
+        }
+        modelAndView.setViewName("home/home");
+
         return modelAndView;
     }
 

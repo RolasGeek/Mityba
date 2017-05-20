@@ -14,6 +14,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,10 +36,13 @@ public class UserController {
     IngredientService iService;
     @Autowired
     RecipeIngredientService riService;
+    @Autowired
+    RegisteredUserService rUserService;
 
     List<UserIngredient> userIngredients = new ArrayList<>();
     List<Ingredient> ingredientslist = new ArrayList<>();
 
+    //TODO: nenaudojamas
     @RequestMapping(value={"/user/home"}, method = RequestMethod.GET)
     public ModelAndView showMainMenu() throws IOException {
         ModelAndView modelAndView = new ModelAndView();
@@ -64,6 +69,15 @@ public class UserController {
     public ModelAndView showProductsInput() {
         ModelAndView modelAndView = new ModelAndView();
         //-------------------------------------------------
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        RegisteredUser user = rUserService.findUserByUsername(auth.getName());
+        if (user != null){
+            modelAndView.addObject("userLevel", user.getUserLevel());
+        }
+        else
+            modelAndView.addObject("userLevel", -1);
+
+
         List<Ingredient> ingredients = iService.getIngredients();
         modelAndView.addObject("ingredients", ingredients);
         modelAndView.addObject("measure", Measure.values());
@@ -107,6 +121,15 @@ public class UserController {
                 }
             }
         }
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        RegisteredUser user = rUserService.findUserByUsername(auth.getName());
+        if (user != null){
+            modelAndView.addObject("userLevel", user.getUserLevel());
+        }
+        else
+            modelAndView.addObject("userLevel", -1);
+
         modelAndView.addObject("recipe", r);
         modelAndView.addObject("rIngredients", rIngredients);
         modelAndView.addObject("ingredients", list);

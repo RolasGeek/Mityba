@@ -38,6 +38,7 @@ public class ManagerController {
         RegisteredUser user = rUserService.findUserByUsername(auth.getName());
         List<RegisteredUser> users = rUserService.getUsers();
         modelAndView.addObject("users", users);
+        modelAndView.addObject("userLevel", user.getUserLevel());
         modelAndView.addObject("userName", "Welcome " + user.getFirstName() + " " + user.getLastName() + " (" + user.getEmail() + ")");
         modelAndView.addObject("userMessage","Content Available Only for Users with Admin Role");
         modelAndView.setViewName("admin/userlist");
@@ -54,6 +55,7 @@ public class ManagerController {
         modelAndView.addObject("ingredients", ingredients);
         modelAndView.addObject("measure", Measure.values());
         modelAndView.addObject("ingredient", new Ingredient());
+        modelAndView.addObject("userLevel", user.getUserLevel());
         modelAndView.addObject("userName", "Welcome " + user.getFirstName() + " " + user.getLastName() + " (" + user.getEmail() + ")");
         modelAndView.addObject("userMessage","Content Available Only for Users with Admin Role");
         modelAndView.setViewName("admin/ingredientlistedit");
@@ -67,13 +69,20 @@ public class ManagerController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         RegisteredUser user = rUserService.findUserByUsername(auth.getName());
         List<Ingredient> ingredients = iService.getIngredients();
+        List<RecipeIngredient> recipeIngredients = new ArrayList<>();
         RecipeIngredient r = new RecipeIngredient();
+        r.setAmount(20.5);
+        r.setIngredientId(Long.parseLong("2"));
+        r.setRecipeId(Long.parseLong("4"));
+        recipeIngredients.add(r);
+
 
         modelAndView.addObject("categories", Category.values());
         modelAndView.addObject("ingredients", ingredients);
         modelAndView.addObject("recipe", new Recipe());
-        modelAndView.addObject("recipeIngredients", new ArrayList<RecipeIngredient>());
+        modelAndView.addObject("recipeIngredients", recipeIngredients);
         modelAndView.addObject("tempRecipeIngredient", new RecipeIngredient());
+        modelAndView.addObject("userLevel", user.getUserLevel());
         modelAndView.addObject("userName", "Welcome " + user.getFirstName() + " " + user.getLastName() + " (" + user.getEmail() + ")");
         modelAndView.setViewName("admin/recipeCreate");
         return modelAndView;

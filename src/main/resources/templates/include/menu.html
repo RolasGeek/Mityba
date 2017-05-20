@@ -1,32 +1,9 @@
 <div th:fragment="menu" id="menu-outer" style="margin-top:10px;width:100%" xmlns:th="http://www.w3.org/1999/xhtml">
-    <div class="inner" style="display:inline-block"><form th:action="@{/admin/home}" method="get">
+    <div class="inner" style="display:inline-block"><form th:action="@{/home}" method="get">
         <button class="btn btn-md btn-info" name="home"
             type="Submit">Pagrindinis</button>
     </form></div>
-     <div class="inner" style="display:inline-block"><form th:action="@{/passreset}" method="get">
-        <button class="btn btn-md btn-info" name="passreset"
-            type="Submit">Slapta�od�io keitimas</button>
-    </form>
-    </div>
-    <!-- TODO: pakeisti, kad nerodytu mygtuku vartojams kurie neturi prieigos -->
-    <!--th:if="${1 == 1}" th:if="${'rolas'.equals('rolandukas')}"-->
-    <div class="inner" style="display:inline-block"><form th:action="@{/admin/userlist}" method="get">
-        <button class="btn btn-md btn-info" name="userlist"
-            type="Submit">Vartotojai</button>
-    </form></div>
-    <div class="inner" style="display:inline-block"><form th:action="@{/admin/ingredientlistedit}" method="get">
-        <button class="btn btn-md btn-info" name="ingredientlist"
-            type="Submit">Ingredientai</button>
-    </form></div>
-    <!-- TODO: pakeisti, kad nerodytu mygtuku vartojams kurie neturi prieigos -->
-    <div class="inner" style="display:inline-block"><form th:action="@{/admin/recipeCreate}" method="get">
-        <button class="btn btn-md btn-info" name="recipeCreate"
-                type="Submit">Kurti receptą</button>
-    </form></div>
-    <div class="inner" style="display:inline-block;float:right"><form th:action="@{/logout}" method="get">
-        <button class="btn btn-md btn-danger" name="registration"
-            type="Submit">Atsijungti</button>
-    </form></div>
+
     <div class="inner" style="display:inline-block"><form th:action="@{/user/productInput}" method="get">
         <button class="btn btn-md btn-info" name="recipesbyproducts"
                 type="Submit">Receptai pagal produktus</button>
@@ -39,9 +16,34 @@
         <button class="btn btn-md btn-info" name="recipesbynewness"
                 type="Submit">Naujausi receptai</button>
     </form></div>
-    <div class="inner" style="display:inline-block;float:right"><form th:action="@{/login}" method="get">
+
+    <!-- TODO: wtf is this one doing here? -->
+     <div th:if="${userLevel == 1}" class="inner" style="display:inline-block"><form th:action="@{/passreset}" method="get">
+        <button class="btn btn-md btn-info" name="passreset"
+            type="Submit">Slaptažodžio keitimas</button>
+    </form>
+
+    </div>
+    <div th:if="${userLevel == 1}" class="inner" style="display:inline-block"><form th:action="@{/admin/userlist}" method="get">
+        <button class="btn btn-md btn-info" name="userlist"
+            type="Submit">Vartotojai</button>
+    </form></div>
+    <div th:if="${userLevel == 1}" class="inner" style="display:inline-block"><form th:action="@{/admin/ingredientlistedit}" method="get">
+        <button class="btn btn-md btn-info" name="ingredientlist"
+            type="Submit">Ingredientai</button>
+    </form></div>
+
+    <div th:if="${userLevel == 1}" class="inner" style="display:inline-block"><form th:action="@{/admin/recipeCreate}" method="get">
+        <button class="btn btn-md btn-info" name="recipeCreate"
+                type="Submit">Kurti receptą</button>
+    </form></div>
+    <div th:if="${userLevel == -1}" class="inner" style="display:inline-block;float:right"><form th:action="@{/login}" method="get">
         <button class="btn btn-md btn-danger" name="login"
                 type="Submit">Prisijungti</button>
+    </form></div>
+    <div th:if="${userLevel != -1}" class="inner" style="display:inline-block;float:right"><form th:action="@{/logout}" method="get">
+        <button class="btn btn-md btn-danger" name="registration"
+            type="Submit">Atsijungti</button>
     </form></div>
 
 </div>
