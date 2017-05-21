@@ -25,7 +25,7 @@ public class RegisteredUserServiceImpl implements RegisteredUserService {
     public void saveUser(RegisteredUser user) {
         user.setPassword(encoder.encode(user.getPassword()));
         user.setActive(1);
-        user.setUserLevel(1);
+        user.setUserLevel(0);
         userRep.save(user);
     }
 

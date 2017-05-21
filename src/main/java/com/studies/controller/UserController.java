@@ -79,7 +79,7 @@ public class UserController {
     }
 
     @RequestMapping(value="/user/productInput", method = RequestMethod.POST)
-    public ModelAndView addUserIngredient(@Valid UserIngredient uingredient,Ingredient ingredient,BindingResult bindingResult) {
+    public ModelAndView addUserIngredient(@Valid UserIngredient uingredient, Ingredient ingredient,BindingResult bindingResult) {
         ModelAndView userIngredientListModel = null;
         List<Ingredient> il = iService.getIngredients();
         for(Ingredient i: il){
@@ -89,13 +89,20 @@ public class UserController {
             }
         }
         if (!bindingResult.hasErrors()) {
-            userIngredients.add(uingredient);
-            ingredientslist.add(ingredient);
-            userIngredientListModel = showProductsInput();
-            userIngredientListModel.addObject("actionMessage", "Ingredientas "+ingredient.getName()+" įtrauktas ");
+            if (uingredient.getAmount() != null) {
+                if (!ingredientExistsInUserIngredientList(uingredient)) {
+                    userIngredients.add(uingredient);
+                    ingredientslist.add(ingredient);
+                    userIngredientListModel = showProductsInput();
+                    userIngredientListModel.addObject("actionMessage", "Ingredientas " + ingredient.getName() + " įtrauktas ");
+                } else {
+                    userIngredientListModel = showProductsInput();
+                    userIngredientListModel.addObject("actionMessage", "Ingredientas yra sąraše");
+                }
+            }
         } else {
             userIngredientListModel = showProductsInput();
-            userIngredientListModel.addObject("actionMessage", "Ingredientas nesukurtas");
+            userIngredientListModel.addObject("actionMessage", "Ingredientas nepridėtas");
         }
         return userIngredientListModel;
     }
@@ -171,8 +178,6 @@ public class UserController {
         }
         else
             modelAndView.addObject("userLevel", -1);
-        System.out.println("!! Useris - "+user.getUsername());
-        System.out.println("!! ID - "+ rId);
         List<UserIngredient> uiList = uiService.findUserIngredientByUsername(user.getUsername());
         List<RecipeIngredient> riList = riService.findRecipeIngredientsByRecipeId(rId);
         List<Ingredient> createdList = new ArrayList<>();
@@ -268,5 +273,14 @@ public class UserController {
         modelAndView.addObject("recipes", recipes);
         modelAndView.setViewName("user/recipesByNewness");
         return modelAndView;
+    }
+
+    private boolean ingredientExistsInUserIngredientList(UserIngredient r){
+        for (UserIngredient ri : userIngredients) {
+            if (ri.getIngredientId() == r.getIngredientId()) {
+                return true;
+            }
+        }
+        return false;
     }
 }
