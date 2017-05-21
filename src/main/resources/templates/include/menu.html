@@ -45,6 +45,10 @@
         <button class="btn btn-md btn-danger" name="login"
                 type="Submit">Prisijungti</button>
     </form></div>
+    <div th:if="${userLevel == -1}" class="inner" style="display:inline-block;float:right"><form th:action="@{/passreset}" method="get">
+        <button class="btn btn-md btn-danger" name="passreset"
+            type="Submit">Atkurti Slaptaþodá</button>
+    </form></div>
     <div th:if="${userLevel != -1}" class="inner" style="display:inline-block;float:right"><form th:action="@{/logout}" method="get">
         <button class="btn btn-md btn-danger" name="registration"
             type="Submit">Atsijungti</button>

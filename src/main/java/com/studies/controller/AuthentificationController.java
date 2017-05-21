@@ -15,10 +15,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.thymeleaf.util.DateUtils;
 
 import com.studies.model.RegisteredUser;
 import com.studies.service.RegisteredUserService;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -34,7 +37,7 @@ public class AuthentificationController {
     @RequestMapping(value="/login", method = RequestMethod.GET)
     public ModelAndView login(){
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("auth/login");
+        modelAndView.setViewName("auth/LoginView");
         return modelAndView;
     }
 
@@ -42,7 +45,7 @@ public class AuthentificationController {
     public ModelAndView register() {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("registeredUser", new RegisteredUser());
-        modelAndView.setViewName("auth/registration");
+        modelAndView.setViewName("auth/Register");
         return modelAndView;
     }
 
@@ -55,12 +58,12 @@ public class AuthentificationController {
                                                 "Vartotojas tokiu prisijungimo vardu jau egzistuoja");
         }
         if (bindingResult.hasErrors()) {
-                modelAndView.setViewName("registration");
+                modelAndView.setViewName("auth/Register");
         } else {
             service.saveUser(user);
             modelAndView.addObject("successMessage", "User has been registered successfully");
             modelAndView.addObject("registeredUser", new RegisteredUser());
-            modelAndView.setViewName("auth/registration");
+            modelAndView.setViewName("auth/Register");
         }
         return modelAndView;
     }
@@ -125,7 +128,7 @@ public class AuthentificationController {
     	modelAndView.addObject("userReq", true);
     	modelAndView.addObject("emailReq", true);
     	modelAndView.addObject("link", "/passreset");
-    	modelAndView.setViewName("auth/passreset");
+    	modelAndView.setViewName("auth/RestorePassword");
     	return modelAndView;
     }
     
@@ -143,10 +146,10 @@ public class AuthentificationController {
             	modelAndView.addObject("username", username);
             	modelAndView.addObject("email", email);
             	modelAndView.addObject("link", "/passresetconfirm");
-            	modelAndView.setViewName("auth/passreset");
+            	modelAndView.setViewName("auth/RestorePassword");
     	} else {
     		modelAndView = loadRestoreWindow();
-    		modelAndView.addObject("error", "Blogas senas slaptazodis");
+    		modelAndView.addObject("error", "Blogi duomenys");
     	}
     	
     	return modelAndView;
@@ -157,7 +160,11 @@ public class AuthentificationController {
     	
     	ModelAndView modelAndView = new ModelAndView();
     	if(validatePassword(newp, conf) != null) {
-    		System.out.println("toli");
+    		RegisteredUser user = service.findUserByUsername(username);
+    		user.setPassword(encoder.encode(newp));
+    		service.updateUser(user);
+    		modelAndView.setViewName("auth/EventSuccessWindow");
+    		modelAndView.addObject("message", "Slaptažodis pakeistas");
     	} else {
     		checkData(username, email);
     	}
