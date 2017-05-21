@@ -56,7 +56,7 @@ public class UserController {
     }
 
     @RequestMapping(value={"/user/productInput"}, method = RequestMethod.GET)
-    public ModelAndView showProductsInput() {
+    public ModelAndView openProductInput() {
         ModelAndView modelAndView = new ModelAndView();
         //-------------------------------------------------
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -90,15 +90,15 @@ public class UserController {
                 if (!ingredientExistsInUserIngredientList(uingredient)) {
                     userIngredients.add(uingredient);
                     ingredientslist.add(ingredient);
-                    userIngredientListModel = showProductsInput();
+                    userIngredientListModel = openProductInput();
                     userIngredientListModel.addObject("actionMessage", "Ingredientas " + ingredient.getName() + " įtrauktas ");
                 } else {
-                    userIngredientListModel = showProductsInput();
+                    userIngredientListModel = openProductInput();
                     userIngredientListModel.addObject("actionMessage", "Ingredientas yra sąraše");
                 }
             }
         } else {
-            userIngredientListModel = showProductsInput();
+            userIngredientListModel = openProductInput();
             userIngredientListModel.addObject("actionMessage", "Ingredientas nepridėtas");
         }
         return userIngredientListModel;
@@ -151,43 +151,12 @@ public class UserController {
             int sk = receptukas.getFavouriteCount();
             receptukas.setFavouriteCount(sk + 1);
             rService.updateRecipe(receptukas);
-            modelAndView = showProductsInput();
+            modelAndView = getRecipeInfo(recId);
             modelAndView.addObject("actionMessage", "Pamėgtas");
         } else {
-            modelAndView = showProductsInput();
+            modelAndView = getRecipeInfo(recId);
             modelAndView.addObject("actionMessage", "Jau yra mėgstamas");
         }
-        return modelAndView;
-    }
-
-    @RequestMapping(value = "/user/productList/{r_id}", method = RequestMethod.GET)
-    public ModelAndView getMissingProductsList(@PathVariable("r_id") Long rId) {
-        ModelAndView modelAndView = new ModelAndView();
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        RegisteredUser user = rUserService.findUserByUsername(auth.getName());
-        modelAndView = fillModel(modelAndView, user);
-        List<UserIngredient> uiList = uiService.findUserIngredientByUsername(user.getUsername());
-        List<RecipeIngredient> riList = riService.findRecipeIngredientsByRecipeId(rId);
-        List<Ingredient> createdList = new ArrayList<>();
-        List<RecipeIngredient> createdList2 = new ArrayList<>();
-        for (UserIngredient ui : uiList) {
-            for (RecipeIngredient ri : riList) {
-                if (ui.getIngredientId() != ri.getIngredientId()) {
-                    Ingredient i = iService.findIngredientById(ri.getIngredientId());
-                    createdList.add(i);
-                    createdList2.add(ri);
-                } else if (ui.getAmount() < ri.getAmount()){
-                    Ingredient i = iService.findIngredientById(ri.getIngredientId());
-                    createdList.add(i);
-                    RecipeIngredient ring = ri;
-                    ring.setAmount(ri.getAmount()-ui.getAmount());
-                    createdList2.add(ring);
-                }
-            }
-        }
-        modelAndView.addObject("ingredients", createdList);
-        modelAndView.addObject("amounts", createdList2);
-        modelAndView.setViewName("user/productList");
         return modelAndView;
     }
 

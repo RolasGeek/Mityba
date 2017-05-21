@@ -1,10 +1,7 @@
 package com.studies.controller;
 
-import com.studies.model.RegisteredUser;
-import com.studies.model.UserIngredient;
-import com.studies.service.IngredientService;
-import com.studies.service.RegisteredUserService;
-import com.studies.service.UserIngredientService;
+import com.studies.model.*;
+import com.studies.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -27,6 +25,12 @@ public class ActiveUserController {
     UserIngredientService uiService;
     @Autowired
     IngredientService iService;
+    @Autowired
+    RecipeIngredientService riService;
+    @Autowired
+    FavouriteRecipeService frService;
+    @Autowired
+    RecipeService rService;
 
     @RequestMapping(value="/activeUser/userEdit", method = RequestMethod.GET)
     public ModelAndView shoUserEditPage(){
@@ -164,6 +168,32 @@ public class ActiveUserController {
         return modelAndView;
     }
 
+    @RequestMapping(value = "/activeUser/productList/{r_id}", method = RequestMethod.GET)
+    public ModelAndView getMissingProductsList(@PathVariable("r_id") Long rId) {
+        ModelAndView modelAndView = new ModelAndView();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        RegisteredUser user = rUserService.findUserByUsername(auth.getName());
+        modelAndView = fillModel(modelAndView, user);
+        List<Ingredient> createdList = new ArrayList<>();
+        List<RecipeIngredient> createdList2 = new ArrayList<>();
+        createdList = creteMissingProductsList(createdList2,user,rId);
+        modelAndView.addObject("ingredients", createdList);
+        modelAndView.addObject("amounts", createdList2);
+        modelAndView.setViewName("activeUser/productList");
+        return modelAndView;
+    }
+
+
+    private ModelAndView fillModel(ModelAndView modelAndView, RegisteredUser user) {
+        if (user != null) {
+            modelAndView.addObject("userLevel", user.getUserLevel());
+            modelAndView.addObject("hasList", (uiService.findUserIngredientByUsername(user.getUsername()).size() > 0));
+        } else {
+            modelAndView.addObject("userLevel", -1);
+            modelAndView.addObject("hasList", false);
+        }
+        return modelAndView;
+    }
 
     public String validatePassword(String current, String inputedPassword, String newPassword, String repeatPassword){
         if (encoder.matches(inputedPassword, current) && newPassword.equals(repeatPassword)){
@@ -171,5 +201,26 @@ public class ActiveUserController {
         }
 
         return null;
+    }
+    private List<Ingredient> creteMissingProductsList(List<RecipeIngredient> createdList2, RegisteredUser user, Long rId){
+        List<Ingredient> createdList = new ArrayList<>();
+        List<UserIngredient> uiList = uiService.findUserIngredientByUsername(user.getUsername());
+        List<RecipeIngredient> riList = riService.findRecipeIngredientsByRecipeId(rId);
+        for (UserIngredient ui : uiList) {
+            for (RecipeIngredient ri : riList) {
+                if (ui.getIngredientId() != ri.getIngredientId()) {
+                    Ingredient i = iService.findIngredientById(ri.getIngredientId());
+                    createdList.add(i);
+                    createdList2.add(ri);
+                } else if (ui.getAmount() < ri.getAmount()){
+                    Ingredient i = iService.findIngredientById(ri.getIngredientId());
+                    createdList.add(i);
+                    RecipeIngredient ring = ri;
+                    ring.setAmount(ri.getAmount()-ui.getAmount());
+                    createdList2.add(ring);
+                }
+            }
+        }
+        return createdList;
     }
 }

@@ -3,7 +3,7 @@
       xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <title>Main Menu</title>
+    <title>Receptas</title>
     <link rel="stylesheet" type="text/css" th:href="@{/css/admin/home.css}" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
@@ -38,7 +38,7 @@
             <p th:text="${recipe.description}"></p>
             <br>
             <a th:if="${userLevel} == 0" href="/user/recipeInfo/like/${recipe.id}" th:href="@{${'/user/recipeInfo/like/' + recipe.id}}" class="btn btn-large btn-success">Mėgti</a>
-            <a th:if="${userLevel} == 0" href="/user/productList/${recipe.id}" th:href="@{${'/user/productList/' + recipe.id}}" class="btn btn-large btn-success">Gauti trūkstamų produktų sąrašą</a>
+            <a th:if="${userLevel} == 0" href="/activeUser/productList/${recipe.id}" th:href="@{${'/activeUser/productList/' + recipe.id}}" class="btn btn-large btn-success">Gauti trūkstamų produktų sąrašą</a>
         </fieldset>
     </form>
 </div>
