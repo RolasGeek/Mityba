@@ -1,5 +1,5 @@
 <div th:fragment="menu" id="menu-outer" style="margin-top:10px;width:100%" xmlns:th="http://www.w3.org/1999/xhtml">
-    <div class="inner" style="display:inline-block"><form th:action="@{/home}" method="get">
+    <div class="inner" style="display:inline-block"><form th:action="@{/mainMenu}" method="get">
         <button class="btn btn-md btn-info" name="home"
             type="Submit">Pagrindinis</button>
     </form></div>
@@ -30,6 +30,10 @@
         <button class="btn btn-md btn-info" name="userEdit"
                 type="Submit">Sukurti ingredientų sąrašą</button>
     </form></div>
+    <div th:if="${userLevel != -1 and hasList}" class="inner" style="display:inline-block"><form th:action="@{/activeUser/ProductListEdit}" method="get">
+        <button class="btn btn-md btn-info" name="userEdit"
+                type="Submit">Redaguoti ingredientų sąrašą</button>
+    </form></div>
 
 
     <div th:if="${userLevel == 1}" class="inner" style="display:inline-block"><form th:action="@{/admin/userlist}" method="get">
@@ -51,7 +55,7 @@
     </form></div>
     <div th:if="${userLevel == -1}" class="inner" style="display:inline-block;float:right"><form th:action="@{/passreset}" method="get">
         <button class="btn btn-md btn-danger" name="passreset"
-            type="Submit">Atkurti Slapta�od�</button>
+            type="Submit">Atkurti Slapta�od�</button>
     </form></div>
     <div th:if="${userLevel != -1}" class="inner" style="display:inline-block;float:right"><form th:action="@{/logout}" method="get">
         <button class="btn btn-md btn-danger" name="registration"
