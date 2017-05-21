@@ -61,11 +61,8 @@ public class UserController {
         //-------------------------------------------------
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         RegisteredUser user = rUserService.findUserByUsername(auth.getName());
-        if (user != null){
-            modelAndView.addObject("userLevel", user.getUserLevel());
-        }
-        else
-            modelAndView.addObject("userLevel", -1);
+
+        modelAndView = fillModel(modelAndView, user);
         //------------------------
         List<Ingredient> ingredients = iService.getIngredients();
         modelAndView.addObject("ingredients", ingredients);
@@ -123,12 +120,7 @@ public class UserController {
         }
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         RegisteredUser user = rUserService.findUserByUsername(auth.getName());
-        if (user != null){
-            modelAndView.addObject("userLevel", user.getUserLevel());
-        }
-        else {
-            modelAndView.addObject("userLevel", -1);
-        }
+        modelAndView = fillModel(modelAndView, user);
         modelAndView.addObject("recipe", r);
         modelAndView.addObject("rIngredients", rIngredients);
         modelAndView.addObject("ingredients", list);
@@ -173,11 +165,7 @@ public class UserController {
         ModelAndView modelAndView = new ModelAndView();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         RegisteredUser user = rUserService.findUserByUsername(auth.getName());
-        if (user != null){
-            modelAndView.addObject("userLevel", user.getUserLevel());
-        }
-        else
-            modelAndView.addObject("userLevel", -1);
+        modelAndView = fillModel(modelAndView, user);
         List<UserIngredient> uiList = uiService.findUserIngredientByUsername(user.getUsername());
         List<RecipeIngredient> riList = riService.findRecipeIngredientsByRecipeId(rId);
         List<Ingredient> createdList = new ArrayList<>();
@@ -208,12 +196,8 @@ public class UserController {
         ModelAndView modelAndView = new ModelAndView();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         RegisteredUser user = rUserService.findUserByUsername(auth.getName());
-        if (user != null){
-            modelAndView.addObject("userLevel", user.getUserLevel());
-        }
-        else
-            modelAndView.addObject("userLevel", -1);
-        //-------------------------------------------------
+        modelAndView = fillModel(modelAndView, user);
+            //-------------------------------------------------
         List<Recipe> recipesLIST = new ArrayList<>();
         List<Recipe> recipes = rService.getRecipes();
         int sk = 0;
@@ -248,11 +232,7 @@ public class UserController {
         ModelAndView modelAndView = new ModelAndView();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         RegisteredUser user = rUserService.findUserByUsername(auth.getName());
-        if (user != null){
-            modelAndView.addObject("userLevel", user.getUserLevel());
-        }
-        else
-            modelAndView.addObject("userLevel", -1);
+        modelAndView = fillModel(modelAndView, user);
         //-------------------------------------------------
         List<Recipe> allRecipes = rService.getRecipes();
         List<Recipe> recipes = new ArrayList<>();
@@ -272,11 +252,7 @@ public class UserController {
         ModelAndView modelAndView = new ModelAndView();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         RegisteredUser user = rUserService.findUserByUsername(auth.getName());
-        if (user != null){
-            modelAndView.addObject("userLevel", user.getUserLevel());
-        }
-        else
-            modelAndView.addObject("userLevel", -1);
+        modelAndView = fillModel(modelAndView, user);
         List<Recipe> allRecipes = rService.getRecipes();
         List<Recipe> recipes = new ArrayList<>();
         Calendar end = Calendar.getInstance();
@@ -303,5 +279,17 @@ public class UserController {
             }
         }
         return false;
+    }
+
+    private ModelAndView fillModel(ModelAndView modelAndView, RegisteredUser user){
+        if (user != null){
+            modelAndView.addObject("userLevel", user.getUserLevel());
+            modelAndView.addObject("hasList", (uiService.findUserIngredientByUsername(user.getUsername()).size() > 0));
+        }
+        else {
+            modelAndView.addObject("userLevel", -1);
+            modelAndView.addObject("hasList", false);
+        }
+        return modelAndView;
     }
 }

@@ -4,6 +4,7 @@ import javax.validation.Valid;
 
 import com.studies.model.Recipe;
 import com.studies.service.RecipeService;
+import com.studies.service.UserIngredientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -30,6 +31,8 @@ public class AuthentificationController {
     RegisteredUserService service;
     @Autowired
     RecipeService rService;
+    @Autowired
+    UserIngredientService uiService;
 
     @Autowired
     private BCryptPasswordEncoder encoder;
@@ -92,6 +95,7 @@ public class AuthentificationController {
         if (user != null){
             modelAndView.addObject("userName", "Welcome " + user.getFirstName() + " " + user.getLastName() + " (" + user.getEmail() + ")");
             modelAndView.addObject("userLevel", user.getUserLevel());
+            modelAndView.addObject("hasList", (uiService.findUserIngredientByUsername(user.getUsername()).size() > 0));
 
             if (user.getUserLevel() == 1){
                 modelAndView.addObject("userMessage","Content Available Only for Users with Admin Role");
@@ -103,6 +107,7 @@ public class AuthentificationController {
         else{
             modelAndView.addObject("userLevel", -1);
             modelAndView.addObject("userMessage", "Unregistered user");
+            modelAndView.addObject("hasList", false);
         }
         modelAndView.setViewName("home/home");
 

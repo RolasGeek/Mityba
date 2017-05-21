@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>User List</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/admin/userlist.css}" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+<div class="container">
+    <div th:replace="include/menu :: menu"></div>
+    <div style="margin-top:40px;font-size:25px">Naujo produktų sąrašo sukūrimas</div>
+    <span th:utext="${actionMessage}" style="color:red"></span>
+
+    <form action="#" th:action="@{/activeUser/createProductList}" method="post" role="form">
+    <table>
+        <tr>
+            <th>Ingredientas</th>
+            <th>Kiekis</th>
+        </tr>
+        <tr th:each="r : ${userIngredients}">
+            <td>
+                <select th:value="${r.ingredientId}" disabled="true">
+                    <option th:selected="${r.ingredientId == i.id}" th:each="i : ${ingredients}" th:value="${i.id}" th:text="${i.name} + ', ' + ${i.getMeasureUnit()}"></option>
+                </select>
+            </td>
+            <td><input type="number" step="0.5" min="0" th:value="${r.amount}" readonly></td>
+        </tr>
+        <tr th:object="${userIngredient}">
+            <td>
+                <select th:field="*{ingredientId}">
+                    <option th:each="i : ${ingredients}" th:value="${i.id}" th:text="${i.name} + ', ' + ${i.getMeasureUnit()}"></option>
+                </select>
+            </td>
+            <td th:object="${userIngredient}">
+                <input type="number" th:field="*{amount}" step="0.5" min="0"  placeholder="kiekis">
+            </td>
+            <td>
+                <button class="btn btn-sm btn-primary btn-block" name="Submit" type="Submit"  th:text="Sukurti"></button>
+            </td>
+        </tr>
+    </table>
+
+    </form>
+
+    <div th:replace="include/footer :: footer"></div>
+</div>
+</body>
+</html>

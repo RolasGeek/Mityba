@@ -34,7 +34,11 @@
                         <th>Kiekis</th>
                     </tr>
                     <tr th:each="r : ${recipeIngredients}">
-                        <td><input th:value="${r.ingredientId}" readonly></td>
+                        <td>
+                            <select th:value="${r.ingredientId}" disabled="true">
+                                <option th:selected="${r.ingredientId == i.id}" th:each="i : ${ingredients}" th:value="${i.id}" th:text="${i.name} + ', ' + ${i.getMeasureUnit()}"></option>
+                            </select>
+                        </td>
                         <td><input type="number" step="0.5" min="0" th:value="${r.amount}" readonly></td>
                     </tr>
                     <tr th:object="${tempRecipeIngredient}">
@@ -46,9 +50,12 @@
                         <td th:object="${tempRecipeIngredient}">
                             <input type="number" th:field="*{amount}" step="0.5" min="0"  placeholder="kiekis">
                         </td>
+                        <td>
+                            <button class="btn btn-sm btn-primary btn-block" name="Submit" type="Submit" th:formaction="@{/admin/recipeCreate}" th:text="Pridėti"></button>
+                        </td>
                     </tr>
                 </table>
-                <button class="btn btn-sm btn-primary btn-block" name="Submit" type="Submit" th:formaction="@{/admin/recipeCreate}" th:text="Pridėti"></button>
+
             </div>
             <button class="btn btn-sm btn-primary btn-block" name="Submit" type="Submit"  th:text="Sukurti"></button>
         </form>

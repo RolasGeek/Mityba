@@ -26,6 +26,10 @@
          <button class="btn btn-md btn-info" name="userEdit"
                  type="Submit">Keisti profilį</button>
      </form></div>
+    <div th:if="${userLevel != -1 and !hasList}" class="inner" style="display:inline-block"><form th:action="@{/activeUser/ProductListCreate}" method="get">
+        <button class="btn btn-md btn-info" name="userEdit"
+                type="Submit">Sukurti ingredientų sąrašą</button>
+    </form></div>
 
 
     <div th:if="${userLevel == 1}" class="inner" style="display:inline-block"><form th:action="@{/admin/userlist}" method="get">

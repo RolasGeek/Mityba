@@ -1,7 +1,10 @@
 package com.studies.controller;
 
 import com.studies.model.RegisteredUser;
+import com.studies.model.UserIngredient;
+import com.studies.service.IngredientService;
 import com.studies.service.RegisteredUserService;
+import com.studies.service.UserIngredientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,9 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.List;
 
 @Controller
 public class ActiveUserController {
@@ -25,6 +26,10 @@ public class ActiveUserController {
     RegisteredUserService rUserService;
     @Autowired
     private BCryptPasswordEncoder encoder;
+    @Autowired
+    UserIngredientService uiService;
+    @Autowired
+    IngredientService iService;
 
     @RequestMapping(value="/activeUser/userEdit", method = RequestMethod.GET)
     public ModelAndView shoUserEditPage(){
@@ -33,6 +38,7 @@ public class ActiveUserController {
         RegisteredUser user = rUserService.findUserByUsername(auth.getName());
         modelAndView.addObject("userLevel", user.getUserLevel());
         modelAndView.addObject("user", user);
+        modelAndView.addObject("hasList", (uiService.findUserIngredientByUsername(user.getUsername()).size() > 0));
         modelAndView.setViewName("activeUser/userEdit");
         return modelAndView;
     }
@@ -69,6 +75,55 @@ public class ActiveUserController {
         }
         return modelAndView;
     }
+
+    @RequestMapping(value="/activeUser/ProductListCreate", method = RequestMethod.GET)
+    public ModelAndView ProductListCreate(){
+        ModelAndView modelAndView = new ModelAndView();
+        RegisteredUser user = rUserService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+
+        modelAndView.addObject("userLevel", user.getUserLevel());
+        modelAndView.addObject("user", user);
+        modelAndView.addObject("hasList", (uiService.findUserIngredientByUsername(user.getUsername()).size() > 0));
+        modelAndView.addObject("userIngredients", uiService.findUserIngredientByUsername(user.getUsername()));
+        modelAndView.addObject("userIngredient", new UserIngredient());
+        modelAndView.addObject("ingredients", iService.getIngredients());
+        modelAndView.setViewName("activeUser/productListCreate");
+        return modelAndView;
+    }
+
+    @RequestMapping(value="/activeUser/createProductList", method = RequestMethod.POST)
+    public ModelAndView createProductList(@Valid UserIngredient userIngredient,
+                                     BindingResult bindingResult){
+        ModelAndView modelAndView = new ModelAndView();
+        boolean exists = false;
+
+        RegisteredUser user = rUserService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        if(!bindingResult.hasErrors()  && userIngredient.getAmount() > 0 && userIngredient.getIngredientId() != null){
+            userIngredient.setUsername(user.getUsername());
+
+            List<UserIngredient> userIngredients = uiService.findUserIngredientByUsername(user.getUsername());
+            for (UserIngredient u : userIngredients){
+                if (u.getIngredientId() == userIngredient.getIngredientId()){
+                    exists = true;
+                }
+            }
+            if (!exists){
+                uiService.saveUserIngredient(userIngredient);
+                modelAndView = ProductListCreate();
+                modelAndView.addObject("actionMessage", "Ingredientas pridėtas");
+            }
+            else{
+                modelAndView = ProductListCreate();
+                modelAndView.addObject("actionMessage", "Toks ingredientas jau yra pridėtas");
+            }
+        }
+        else{
+            modelAndView = ProductListCreate();
+            modelAndView.addObject("actionMessage", "Ingredientas nepridėtas");
+        }
+        return modelAndView;
+    }
+
 
     public String validatePassword(String current, String inputedPassword, String newPassword, String repeatPassword){
         if (encoder.matches(inputedPassword, current) && newPassword.equals(repeatPassword)){

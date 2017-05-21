@@ -2,10 +2,7 @@
 package com.studies.controller;
 
 import com.studies.model.*;
-import com.studies.service.RecipeIngredientService;
-import com.studies.service.RecipeService;
-import com.studies.service.RegisteredUserService;
-import com.studies.service.IngredientService;
+import com.studies.service.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,6 +29,8 @@ public class ManagerController {
     RecipeService rService;
     @Autowired
     RecipeIngredientService riService;
+    @Autowired
+    UserIngredientService uiService;
 
     private List<RecipeIngredient> recipeIngredients = new ArrayList<>();
     
@@ -43,6 +42,7 @@ public class ManagerController {
         List<RegisteredUser> users = rUserService.getUsers();
         modelAndView.addObject("users", users);
         modelAndView.addObject("userLevel", user.getUserLevel());
+        modelAndView.addObject("hasList", (uiService.findUserIngredientByUsername(user.getUsername()).size() > 0));
         modelAndView.addObject("userName", "Welcome " + user.getFirstName() + " " + user.getLastName() + " (" + user.getEmail() + ")");
         modelAndView.addObject("userMessage","Content Available Only for Users with Admin Role");
         modelAndView.setViewName("admin/userlist");
@@ -60,6 +60,7 @@ public class ManagerController {
         modelAndView.addObject("measure", Measure.values());
         modelAndView.addObject("ingredient", new Ingredient());
         modelAndView.addObject("userLevel", user.getUserLevel());
+        modelAndView.addObject("hasList", (uiService.findUserIngredientByUsername(user.getUsername()).size() > 0));
         modelAndView.addObject("userName", "Welcome " + user.getFirstName() + " " + user.getLastName() + " (" + user.getEmail() + ")");
         modelAndView.addObject("userMessage","Content Available Only for Users with Admin Role");
         modelAndView.setViewName("admin/ingredientlistedit");
@@ -80,6 +81,7 @@ public class ManagerController {
         modelAndView.addObject("recipeIngredients", recipeIngredients);
         modelAndView.addObject("tempRecipeIngredient", new RecipeIngredient());
         modelAndView.addObject("userLevel", user.getUserLevel());
+        modelAndView.addObject("hasList", (uiService.findUserIngredientByUsername(user.getUsername()).size() > 0));
         modelAndView.addObject("userName", "Welcome " + user.getFirstName() + " " + user.getLastName() + " (" + user.getEmail() + ")");
         modelAndView.setViewName("admin/recipeCreate");
         return modelAndView;
@@ -152,6 +154,7 @@ public class ManagerController {
         ModelAndView recipeListModel = null;
         if (!bindingResult.hasErrors() && recipeIngredients.size() > 0){
             recipe.setImage(multipartFile.getBytes());
+
             rService.saveRecipe(recipe);
             List<Recipe> recipes = rService.getRecipes();
             Long id = recipes.get(recipes.size() - 1).getId();
