@@ -20,9 +20,9 @@
             <select th:field="*{recipe.category}">
                 <option th:each="c : ${categories}" th:value="${c.name}" th:text="${c.name}"></option>
             </select>
-            <input type="number" step="5" min="0" th:field="*{recipe.cooking_time}" placeholder="gaminimo laikas">
+            <input type="number" step="5" min="0" th:field="*{recipe.cookingTime}" placeholder="gaminimo laikas">
             <input type="text" th:field="*{recipe.description}" placeholder="aprašymas">
-            <input type="number" min="0" th:field="*{recipe.number_of_servings}" placeholder="porcijų skaičius">
+            <input type="number" min="0" th:field="*{recipe.numberOfServings}" placeholder="porcijų skaičius">
             <input type="file" accept=".jpg, .png" name="randomMagic">
             <br>
             <br>

@@ -156,9 +156,9 @@ public class UserController {
             fr.setRecipeId(recId);
             frService.saveFavouriteRecipe(fr);
             Recipe receptukas = rService.findRecipeById(recId);
-            int sk = receptukas.getFavourite_count();
-            receptukas.setFavourite_count(sk + 1);
-            rService.saveRecipe(receptukas);
+            int sk = receptukas.getFavouriteCount();
+            receptukas.setFavouriteCount(sk + 1);
+            rService.updateRecipe(receptukas);
             modelAndView = showProductsInput();
             modelAndView.addObject("actionMessage", "Pamėgtas");
         } else {
@@ -206,6 +206,13 @@ public class UserController {
     @RequestMapping(value={"/user/recipesByProducts"}, method = RequestMethod.GET)
     public ModelAndView showRecipesByProducts() {
         ModelAndView modelAndView = new ModelAndView();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        RegisteredUser user = rUserService.findUserByUsername(auth.getName());
+        if (user != null){
+            modelAndView.addObject("userLevel", user.getUserLevel());
+        }
+        else
+            modelAndView.addObject("userLevel", -1);
         //-------------------------------------------------
         List<Recipe> recipesLIST = new ArrayList<>();
         List<Recipe> recipes = rService.getRecipes();
@@ -239,11 +246,18 @@ public class UserController {
     @RequestMapping(value={"/user/recipesByPopularity"}, method = RequestMethod.GET)
     public ModelAndView showRecipesByPopularity() {
         ModelAndView modelAndView = new ModelAndView();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        RegisteredUser user = rUserService.findUserByUsername(auth.getName());
+        if (user != null){
+            modelAndView.addObject("userLevel", user.getUserLevel());
+        }
+        else
+            modelAndView.addObject("userLevel", -1);
         //-------------------------------------------------
         List<Recipe> allRecipes = rService.getRecipes();
         List<Recipe> recipes = new ArrayList<>();
         for (Recipe r : allRecipes) {
-            if (r.getFavourite_count() >= 10 && r.getView_count() >= 10) {
+            if (r.getFavouriteCount() >= 10 && r.getViewCount() >= 10) {
                 recipes.add(r);
             }
         }
@@ -256,13 +270,20 @@ public class UserController {
     @RequestMapping(value={"/user/recipesByNewness"}, method = RequestMethod.GET)
     public ModelAndView showRecipesByNewness() {
         ModelAndView modelAndView = new ModelAndView();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        RegisteredUser user = rUserService.findUserByUsername(auth.getName());
+        if (user != null){
+            modelAndView.addObject("userLevel", user.getUserLevel());
+        }
+        else
+            modelAndView.addObject("userLevel", -1);
         List<Recipe> allRecipes = rService.getRecipes();
         List<Recipe> recipes = new ArrayList<>();
         Calendar end = Calendar.getInstance();
         Date endDate = end.getTime();
         long endTime = endDate.getTime();
         for (Recipe r : allRecipes) {
-            Date start = r.getCreation_date();
+            Date start = r.getCreationDate();
             long startTime = start.getTime();
             long diffTime = endTime - startTime;
             long diffDays = diffTime / (1000 * 60 * 60 * 24);

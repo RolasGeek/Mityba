@@ -4,7 +4,6 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import java.util.Date;
 
 /**
@@ -31,7 +30,7 @@ public class Recipe {
    // @Pattern(regexp = "([0-9]*)", message = "Laukas turi būti sudarytas tik iš skaičių")
    // @NotEmpty(message = "*Neįvestas gaminimo laikas")
     @Column(name = "cooking_time")
-    private Double cooking_time;
+    private Double cookingTime;
 
     @NotNull(message = "*Nepasirinkta kategorija")
     @Column(name = "category")
@@ -41,10 +40,10 @@ public class Recipe {
    // @Pattern(regexp = "([0-9]*)", message = "Laukas turi būti sudarytas tik iš skaičių")
   //  @NotEmpty(message = "*Neįvestas porcijų skaičius")
     @Column(name = "number_of_servings")
-    private Integer number_of_servings;
+    private Integer numberOfServings;
 
     @Column(name = "creation_date")
-    private Date creation_date;
+    private Date creationDate;
 
     //Pataisyti
  //   @NotEmpty(message = "*Nepridėtas paveikslėlis")
@@ -54,13 +53,13 @@ public class Recipe {
     private byte[] image;
 
     @Column(name = "view_count")
-    private Integer view_count;
+    private Integer viewCount;
 
     @Column(name = "favourite_count")
-    private Integer favourite_count;
+    private Integer favouriteCount;
 
     @Column(name = "unseen_days")
-    private Integer unseen_days;
+    private Integer unseenDays;
 
     public Long getId() {
         return id;
@@ -86,12 +85,12 @@ public class Recipe {
         this.description = description;
     }
 
-    public Double getCooking_time() {
-        return cooking_time;
+    public Double getCookingTime() {
+        return cookingTime;
     }
 
-    public void setCooking_time(Double cooking_time) {
-        this.cooking_time = cooking_time;
+    public void setCookingTime(Double cookingTime) {
+        this.cookingTime = cookingTime;
     }
 
     public Category getCategory() {
@@ -102,20 +101,20 @@ public class Recipe {
         this.category = category;
     }
 
-    public Integer getNumber_of_servings() {
-        return number_of_servings;
+    public Integer getNumberOfServings() {
+        return numberOfServings;
     }
 
-    public void setNumber_of_servings(Integer number_of_servings) {
-        this.number_of_servings = number_of_servings;
+    public void setNumberOfServings(Integer numberOfServings) {
+        this.numberOfServings = numberOfServings;
     }
 
-    public Date getCreation_date() {
-        return creation_date;
+    public Date getCreationDate() {
+        return creationDate;
     }
 
-    public void setCreation_date(Date creation_date) {
-        this.creation_date = creation_date;
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
     }
 
     public byte[] getImage() {
@@ -126,27 +125,27 @@ public class Recipe {
         this.image = image;
     }
 
-    public Integer getView_count() {
-        return view_count;
+    public Integer getViewCount() {
+        return viewCount;
     }
 
-    public void setView_count(Integer view_count) {
-        this.view_count = view_count;
+    public void setViewCount(Integer viewCount) {
+        this.viewCount = viewCount;
     }
 
-    public Integer getFavourite_count() {
-        return favourite_count;
+    public Integer getFavouriteCount() {
+        return favouriteCount;
     }
 
-    public void setFavourite_count(Integer favourite_count) {
-        this.favourite_count = favourite_count;
+    public void setFavouriteCount(Integer favouriteCount) {
+        this.favouriteCount = favouriteCount;
     }
 
-    public Integer getUnseen_days() {
-        return unseen_days;
+    public Integer getUnseenDays() {
+        return unseenDays;
     }
 
-    public void setUnseen_days(Integer unseen_days) {
-        this.unseen_days = unseen_days;
+    public void setUnseenDays(Integer unseenDays) {
+        this.unseenDays = unseenDays;
     }
 }

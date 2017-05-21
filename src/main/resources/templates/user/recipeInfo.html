@@ -21,9 +21,9 @@
             <img th:with="link=${'/image/' + recipe.id}" th:src="@{${link}}" />
             <table id="t02" >
                 <tr><th>Gaiminimo laikas</th></tr>
-                <tr><td th:text="${recipe.cooking_time} + ', min.'"></td> </tr>
+                <tr><td th:text="${recipe.cookingTime} + ', min.'"></td> </tr>
                 <tr><th>Porcijų skaičius</th></tr>
-                <tr><td th:text="${recipe.number_of_servings}"></td></tr>
+                <tr><td th:text="${recipe.numberOfServings}"></td></tr>
             </table>
             <h4>Ingredientai:</h4>
             <table id="t02" >
