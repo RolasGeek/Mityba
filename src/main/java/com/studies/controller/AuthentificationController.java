@@ -45,7 +45,7 @@ public class AuthentificationController {
     }
 
     @RequestMapping(value = "/registration", method = RequestMethod.GET) 
-    public ModelAndView register() {
+    public ModelAndView loadRegisterWindow() {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("registeredUser", new RegisteredUser());
         modelAndView.setViewName("auth/Register");
@@ -55,8 +55,8 @@ public class AuthentificationController {
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
     public ModelAndView createNewUser(@Valid RegisteredUser user, BindingResult bindingResult) {
         ModelAndView modelAndView = new ModelAndView();
-        RegisteredUser userExists = service.findUserByUsername(user.getUsername());
-        if (userExists != null) {
+
+        if (validateRegister(user.getUsername())) {
             bindingResult.rejectValue("username", "error.user",
                                                 "Vartotojas tokiu prisijungimo vardu jau egzistuoja");
         }
@@ -164,9 +164,10 @@ public class AuthentificationController {
     public ModelAndView checkPassword(@ModelAttribute(name="username1") String username,@ModelAttribute(name="email1") String email , @RequestParam(name="newpass") String newp, @RequestParam(name="conpass") String conf) {
     	
     	ModelAndView modelAndView = new ModelAndView();
-    	if(validatePassword(newp, conf) != null) {
+    	String encPass = validatePassword(newp, conf);
+    	if(encPass!= null) {
     		RegisteredUser user = service.findUserByUsername(username);
-    		user.setPassword(encoder.encode(newp));
+    		user.setPassword(encPass);
     		service.updateUser(user);
     		modelAndView.setViewName("auth/EventSuccessWindow");
     		modelAndView.addObject("message", "Slaptažodis pakeistas");
@@ -176,6 +177,13 @@ public class AuthentificationController {
     	
     	
     	return modelAndView;
+    }
+    
+    //Validate methods
+    
+    public boolean validateRegister(String username) {
+    	RegisteredUser userExists = service.findUserByUsername(username);
+    	return userExists != null;
     }
     
     public boolean validateSecretData(String username, String email) {
