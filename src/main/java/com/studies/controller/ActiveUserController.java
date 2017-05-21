@@ -11,10 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
@@ -75,6 +72,49 @@ public class ActiveUserController {
         }
         return modelAndView;
     }
+
+    @RequestMapping(value="/activeUser/ProductListEdit", method = RequestMethod.GET)
+    public ModelAndView ProductListEdit(){
+        ModelAndView modelAndView = new ModelAndView();
+        RegisteredUser user = rUserService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+
+        modelAndView.addObject("userLevel", user.getUserLevel());
+        modelAndView.addObject("user", user);
+        modelAndView.addObject("hasList", (uiService.findUserIngredientByUsername(user.getUsername()).size() > 0));
+        modelAndView.addObject("userIngredients", uiService.findUserIngredientByUsername(user.getUsername()));
+        modelAndView.addObject("userIngredient", new UserIngredient());
+        modelAndView.addObject("editedUserIngredient", new UserIngredient());
+        modelAndView.addObject("ingredients", iService.getIngredients());
+        modelAndView.setViewName("activeUser/productListEdit");
+        return modelAndView;
+    }
+
+    @RequestMapping(value="/activeUser/editProductList/{action}", method = RequestMethod.POST)
+    public ModelAndView editProductList(@Valid UserIngredient userIngredient,
+                                        @Valid UserIngredient editedUserIngredient,
+                                        @RequestParam("index") Integer index,
+                                        @RequestParam("id") Long id,
+                                        @RequestParam("amount") Double amount,
+                                        @PathVariable("action") Integer action,
+                                        BindingResult bindingResult){
+        ModelAndView modelAndView = new ModelAndView();
+        boolean exists = false;
+        RegisteredUser user = rUserService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        if (!bindingResult.hasErrors()){
+            if(action == 1){ //addNew
+
+            }
+            else if (action == 2){ //edit
+
+            }
+            else if (action == 3){ //delete
+
+            }
+        }
+        modelAndView = ProductListEdit();
+        return modelAndView;
+    }
+
 
     @RequestMapping(value="/activeUser/ProductListCreate", method = RequestMethod.GET)
     public ModelAndView ProductListCreate(){

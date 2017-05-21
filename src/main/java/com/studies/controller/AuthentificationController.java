@@ -82,7 +82,7 @@ public class AuthentificationController {
         return modelAndView;
     }
 
-    @RequestMapping(value={"/", "/home"}, method = RequestMethod.GET)
+    @RequestMapping(value={"/", "/mainMenu"}, method = RequestMethod.GET)
     public ModelAndView home(){
         ModelAndView modelAndView = new ModelAndView();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -109,7 +109,7 @@ public class AuthentificationController {
             modelAndView.addObject("userMessage", "Unregistered user");
             modelAndView.addObject("hasList", false);
         }
-        modelAndView.setViewName("home/home");
+        modelAndView.setViewName("home/mainMenu");
 
         return modelAndView;
     }
@@ -126,6 +126,8 @@ public class AuthentificationController {
     @RequestMapping(value="/passreset", method = RequestMethod.GET) 
     public 	ModelAndView loadRestoreWindow() {
     	ModelAndView modelAndView = new ModelAndView();
+    	modelAndView.addObject("userLevel", -1);
+    	modelAndView.addObject("hasList", false);
 		modelAndView.addObject("userDiss", false);
 		modelAndView.addObject("emailDiss", false);
     	modelAndView.addObject("newDiss", true);
@@ -142,16 +144,18 @@ public class AuthentificationController {
     	
     	ModelAndView modelAndView = new ModelAndView();
     	if(validateSecretData(username, email)) {
-    			modelAndView.addObject("userDiss", true);
-    			modelAndView.addObject("emailDiss", true);
-            	modelAndView.addObject("newDiss", false);
-            	modelAndView.addObject("conDiss", false);
-            	modelAndView.addObject("userReq", false);
-            	modelAndView.addObject("emailReq", false);
-            	modelAndView.addObject("username", username);
-            	modelAndView.addObject("email", email);
-            	modelAndView.addObject("link", "/passresetconfirm");
-            	modelAndView.setViewName("auth/RestorePassword");
+            modelAndView.addObject("userLevel", -1);
+            modelAndView.addObject("hasList", false);
+            modelAndView.addObject("userDiss", true);
+            modelAndView.addObject("emailDiss", true);
+            modelAndView.addObject("newDiss", false);
+            modelAndView.addObject("conDiss", false);
+            modelAndView.addObject("userReq", false);
+            modelAndView.addObject("emailReq", false);
+            modelAndView.addObject("username", username);
+            modelAndView.addObject("email", email);
+            modelAndView.addObject("link", "/passresetconfirm");
+            modelAndView.setViewName("auth/RestorePassword");
     	} else {
     		modelAndView = loadRestoreWindow();
     		modelAndView.addObject("error", "Blogi duomenys");
