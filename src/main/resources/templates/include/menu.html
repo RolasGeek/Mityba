@@ -55,7 +55,7 @@
     </form></div>
     <div th:if="${userLevel == -1}" class="inner" style="display:inline-block;float:right"><form th:action="@{/passreset}" method="get">
         <button class="btn btn-md btn-danger" name="passreset"
-            type="Submit">Atkurti Slapta�od�</button>
+            type="Submit">Atkurti Slaptažoodį</button>
     </form></div>
     <div th:if="${userLevel != -1}" class="inner" style="display:inline-block;float:right"><form th:action="@{/logout}" method="get">
         <button class="btn btn-md btn-danger" name="registration"
