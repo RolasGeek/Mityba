@@ -53,6 +53,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers("/login").permitAll()
 				.antMatchers("/registration").permitAll()
 				.antMatchers("/fakelogout").permitAll()
+				.antMatchers("/fakelogin").permitAll()
 				.antMatchers("/passreset").anonymous()
 				.antMatchers("/passresetconfirm").anonymous()
 				.antMatchers("/mainMenu").permitAll()
@@ -74,6 +75,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         filter.setForceEncoding(true);
         http.addFilterBefore(filter,CsrfFilter.class);
 	}
+	
 	
 	@Override
 	public void configure(WebSecurity web) throws Exception {

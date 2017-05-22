@@ -38,7 +38,7 @@ public class AuthentificationController {
     private BCryptPasswordEncoder encoder;
 
     @RequestMapping(value="/login", method = RequestMethod.GET)
-    public ModelAndView login(){
+    public ModelAndView openLogin(){
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("auth/LoginView");
         return modelAndView;
@@ -64,9 +64,9 @@ public class AuthentificationController {
                 modelAndView.setViewName("auth/Register");
         } else {
             service.saveUser(user);
-            modelAndView.addObject("successMessage", "User has been registered successfully");
+            modelAndView.addObject("message", "Vartotojas sukurtas");
             modelAndView.addObject("registeredUser", new RegisteredUser());
-            modelAndView.setViewName("auth/Register");
+            modelAndView.setViewName("auth/EventSuccessWindow");
         }
         return modelAndView;
     }
@@ -118,7 +118,8 @@ public class AuthentificationController {
     public ModelAndView logout(){
         ModelAndView modelAndView = new ModelAndView();
         SecurityContextHolder.getContext().setAuthentication(null);
-        modelAndView = login();
+        modelAndView = home();
+        modelAndView.addObject("actionMessage", "Atsijungta");
         
         return modelAndView;
     }

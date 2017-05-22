@@ -10,12 +10,18 @@
   	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 <body>
-<div class="inner" style="display:inline-block"><form th:action="@{/home}" method="get">
+<div class="container" style="width: 90%; margin:auto;">
+<div class="inner" style="display:inline-block;">
+<form th:action="@{/home}" method="get">
         <button class="btn btn-md btn-info" name="home"
             type="Submit">Į pagrindinį</button>
     </form></div>
 <div>
 <span th:utext="${message}"></span>
+<div style="margin:100px;">
+<img th:src="@{/images/eventSuccess.jpg}"/>
+</div>
+</div>
 </div>
 </body>
 </html>
