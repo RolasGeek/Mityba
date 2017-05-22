@@ -172,20 +172,20 @@ public class UserController {
         int sk = 0;
         for (Recipe r : recipes) {
             List<RecipeIngredient> ril = riService.findRecipeIngredientsByRecipeId(r.getId());
-            if (ril.size() == ingredientslist.size()) {
+            if (ril.size() <= ingredientslist.size()) {
                 for (RecipeIngredient ri : ril) {
                     for(int j = 0; j < ingredientslist.size(); j++) {
                         Ingredient i = ingredientslist.get(j);
                         UserIngredient ui = userIngredients.get(j);
-                        if (ri.getIngredientId() == i.getId() && ri.getAmount() >= ui.getAmount()) {
+                        if (ri.getIngredientId() == i.getId() && ri.getAmount() <= ui.getAmount()) {
                             sk++;
                         }
                     }
                 }
-                if (sk == ingredientslist.size()){
+                if (sk == ril.size()){
                     recipesLIST.add(r);
-                    sk = 0;
                 }
+                sk = 0;
             }
         }
         //------------------------
