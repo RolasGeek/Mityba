@@ -54,6 +54,11 @@
                          <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>&nbsp;Atkurti slaptažodį
                     </a>
                 </li>
+                 <li th:if="${userLevel == -1}" >
+                    <a href="/passreset" th:href="@{/registration}">
+                         <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>&nbsp;Registracija
+                    </a>
+                </li>
                 <li th:if="${userLevel != -1}" >
                     <a href="/logout" th:href="@{/logout}">
                         <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>&nbsp;Atsijungti

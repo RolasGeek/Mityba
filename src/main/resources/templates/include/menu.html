@@ -16,12 +16,6 @@
         <button class="btn btn-md btn-info" name="recipesbynewness"
                 type="Submit">Naujausi receptai</button>
     </form></div>
-
-    <!-- TODO: wtf is this one doing here? -->
-     <div th:if="${userLevel == 1}" class="inner" style="display:inline-block"><form th:action="@{/passreset}" method="get">
-        <button class="btn btn-md btn-info" name="passreset"
-            type="Submit">Slaptažodžio keitimas</button>
-     </form></div>
      <div th:if="${userLevel != -1}" class="inner" style="display:inline-block"><form th:action="@{/activeUser/userEdit}" method="get">
          <button class="btn btn-md btn-info" name="userEdit"
                  type="Submit">Keisti profilį</button>
@@ -49,14 +43,19 @@
         <button class="btn btn-md btn-info" name="recipeCreate"
                 type="Submit">Kurti receptą</button>
     </form></div>
-    <div th:if="${userLevel == -1}" class="inner" style="display:inline-block;float:right"><form th:action="@{/login}" method="get">
-        <button class="btn btn-md btn-danger" name="login"
-                type="Submit">Prisijungti</button>
+    <div th:if="${userLevel == -1}" class="inner" style="display:inline-block;float:right"><form th:action="@{/registration}" method="get">
+        <button class="btn btn-md btn-danger" name="register"
+                type="Submit">Registruotis</button>
     </form></div>
     <div th:if="${userLevel == -1}" class="inner" style="display:inline-block;float:right"><form th:action="@{/passreset}" method="get">
         <button class="btn btn-md btn-danger" name="passreset"
             type="Submit">Atkurti Slaptažoodį</button>
     </form></div>
+    <div th:if="${userLevel == -1}" class="inner" style="display:inline-block;float:right"><form th:action="@{/login}" method="get">
+        <button class="btn btn-md btn-danger" name="login"
+                type="Submit">Prisijungti</button>
+    </form></div>
+    
     <div th:if="${userLevel != -1}" class="inner" style="display:inline-block;float:right"><form th:action="@{/logout}" method="get">
         <button class="btn btn-md btn-danger" name="registration"
             type="Submit">Atsijungti</button>

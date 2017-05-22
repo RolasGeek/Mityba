@@ -11,12 +11,9 @@
 </head>
 <body>
 <div class="container" style="width: 90%; margin:auto;">
+<table th:replace="include/magic :: menu"></table>
+		<br></br><br></br><br></br>
 <div class="inner" style="display:inline-block;">
-<form th:action="@{/home}" method="get">
-        <button class="btn btn-md btn-info" name="home"
-            type="Submit">Į pagrindinį</button>
-    </form></div>
-<div>
 <span th:utext="${message}"></span>
 <div style="margin:100px;">
 <img th:src="@{/images/eventSuccess.jpg}"/>

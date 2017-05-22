@@ -11,12 +11,11 @@
 </head>
 
 <body>
-	<form th:action="@{/registration}" method="get">
-		<button class="btn btn-md btn-warning btn-block" type="Submit">Registruotis</button>
-	</form>	
+	
 	
 	<div class="container">
-		
+		<table th:replace="include/magic :: menu"></table>
+		<br></br><br></br><br></br>
 		<form th:action="@{/login}" method="POST" class="form-signin">
 			<br/>
 			 

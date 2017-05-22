@@ -7,6 +7,7 @@ import com.studies.service.RecipeService;
 import com.studies.service.UserIngredientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -22,6 +23,7 @@ import com.studies.model.RegisteredUser;
 import com.studies.service.RegisteredUserService;
 
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -40,6 +42,8 @@ public class AuthentificationController {
     @RequestMapping(value="/login", method = RequestMethod.GET)
     public ModelAndView openLogin(){
         ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("userLevel", Integer.parseInt(getRole()));
+        modelAndView.addObject("hasList", false);
         modelAndView.setViewName("auth/LoginView");
         return modelAndView;
     }
@@ -48,6 +52,8 @@ public class AuthentificationController {
     public ModelAndView loadRegisterWindow() {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("registeredUser", new RegisteredUser());
+        modelAndView.addObject("userLevel", Integer.parseInt(getRole()));
+        modelAndView.addObject("hasList", false);
         modelAndView.setViewName("auth/Register");
         return modelAndView;
     }
@@ -68,6 +74,8 @@ public class AuthentificationController {
             modelAndView.addObject("registeredUser", new RegisteredUser());
             modelAndView.setViewName("auth/EventSuccessWindow");
         }
+        modelAndView.addObject("userLevel", Integer.parseInt(getRole()));
+        modelAndView.addObject("hasList", false);
         return modelAndView;
     }
 
@@ -79,6 +87,8 @@ public class AuthentificationController {
         modelAndView.addObject("userName", "Welcome " + user.getFirstName() + " " + user.getLastName() + " (" + user.getEmail() + ")");
         modelAndView.addObject("userMessage","Content Available Only for Users with Admin Role");
         modelAndView.setViewName("admin/home");
+        modelAndView.addObject("userLevel", Integer.parseInt(getRole()));
+        modelAndView.addObject("hasList", false);
         return modelAndView;
     }
 
@@ -110,7 +120,8 @@ public class AuthentificationController {
             modelAndView.addObject("hasList", false);
         }
         modelAndView.setViewName("home/mainMenu");
-
+        modelAndView.addObject("userLevel", Integer.parseInt(getRole()));
+        modelAndView.addObject("hasList", false);
         return modelAndView;
     }
 
@@ -120,7 +131,8 @@ public class AuthentificationController {
         SecurityContextHolder.getContext().setAuthentication(null);
         modelAndView = home();
         modelAndView.addObject("actionMessage", "Atsijungta");
-        
+        modelAndView.addObject("userLevel", Integer.parseInt(getRole()));
+        modelAndView.addObject("hasList", false);
         return modelAndView;
     }
     
@@ -137,6 +149,8 @@ public class AuthentificationController {
     	modelAndView.addObject("emailReq", true);
     	modelAndView.addObject("link", "/passreset");
     	modelAndView.setViewName("auth/RestorePassword");
+    	modelAndView.addObject("userLevel", Integer.parseInt(getRole()));
+        modelAndView.addObject("hasList", false);
     	return modelAndView;
     }
     
@@ -159,9 +173,10 @@ public class AuthentificationController {
             modelAndView.setViewName("auth/RestorePassword");
     	} else {
     		modelAndView = loadRestoreWindow();
-    		modelAndView.addObject("error", "Blogi duomenys");
+    		modelAndView.addObject("message", "Blogi duomenys");
     	}
-    	
+    	modelAndView.addObject("userLevel", Integer.parseInt(getRole()));
+        modelAndView.addObject("hasList", false);
     	return modelAndView;
     }
     
@@ -177,10 +192,12 @@ public class AuthentificationController {
     		modelAndView.setViewName("auth/EventSuccessWindow");
     		modelAndView.addObject("message", "Slaptažodis pakeistas");
     	} else {
-    		checkData(username, email);
+    		modelAndView = checkData(username, email);
+    		modelAndView.addObject("message", "Nesutampa slaptažodžiai");
     	}
     	
-    	
+    	modelAndView.addObject("userLevel", Integer.parseInt(getRole()));
+        modelAndView.addObject("hasList", false);
     	return modelAndView;
     }
     
@@ -193,7 +210,7 @@ public class AuthentificationController {
     
     public boolean validateSecretData(String username, String email) {
     	RegisteredUser user = service.findUserByUsername(username);
-    	return email.equals(user.getEmail());
+    	return user != null ? email.equals(user.getEmail()) : false;
     }
     
     public String validatePassword(String pass1, String pass2) {
@@ -202,6 +219,20 @@ public class AuthentificationController {
     	}
     	return null;
     }
+    
+    private String getRole() {
+    	  Collection<GrantedAuthority> authorities = (Collection<GrantedAuthority>)
+    	  SecurityContextHolder.getContext().getAuthentication().getAuthorities();
+    	  String roles = "";
+    	  for (GrantedAuthority authority : authorities) {
+    	     roles = authority.getAuthority().toString();
+    	     if (roles == "ROLE_ANONYMOUS") {
+    	    	 roles = "-1";
+    		  break;
+    	     }
+    	  }
+    	  return roles;
+    	}
     
     
 }
