@@ -14,6 +14,7 @@
 <div class="container">
     <table th:replace="include/menu :: menu"></table>
     <span th:utext="${actionMessage}" style="color:red"></span>
+    <br><br><br>
     <form action="#" th:action="@{/user/recipeInfo}" th:object="${recipe}" method="post" role="form">
         <table id="t02" th:each="i : ${recipes}">
             <h4 th:text="${i.name}"></h4>
