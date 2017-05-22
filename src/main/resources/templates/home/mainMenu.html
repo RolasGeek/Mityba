@@ -13,9 +13,9 @@
 
 <body>
 <div class="container">
-    <table th:replace="include/menu :: menu"></table>
+    <table th:replace="include/magic :: menu"></table>
     <span th:utext="${actionMessage}" style="color:red"></span>
-    <br></br><br></br><br></br>
+    <br><br><br>
     <form action="#" th:action="@{/user/recipeInfo}" th:object="${recipe}" method="post" role="form">
         <table id="t02" th:each="i : ${recipes}">
             <h4 th:text="${i.name}"></h4>
@@ -23,7 +23,6 @@
                 <img style="width: 30%" th:with="link=${'/image/' + i.id}" th:src="@{${link}}" /></a>
             </tr>
         </table>
-        <p>ėęčėčęšųšįų9ūšėęč</p>
     </form>
 </div>
 </body>

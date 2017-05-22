@@ -19,10 +19,10 @@ import org.springframework.data.annotation.Transient;
 public class RegisteredUser {
     @NotEmpty(message = "*Vardas turi būti įvestas")
     @Column(name = "first_name")
-    @Pattern(regexp = "([a-zA-Z0-9]*)", message ="Laukas turi būti sudarytas tik iš skaičių ir raidžių")
+    @Pattern(regexp = "([a-žA-Ž0-9]*)", message ="Laukas turi būti sudarytas tik iš skaičių ir raidžių")
     private String firstName;
 
-    @Pattern(regexp = "([a-zA-Z0-9]*)", message ="Laukas turi būti sudarytas tik iš skaičių ir raidžių")
+    @Pattern(regexp = "([a-žA-Ž0-9]*)", message ="Laukas turi būti sudarytas tik iš skaičių ir raidžių")
     @NotEmpty(message = "*Pavardė turi būti įvesta")
     @Column(name = "last_name")
     private String lastName;
@@ -34,7 +34,7 @@ public class RegisteredUser {
     private String password;
 
     @Id
-    @Pattern(regexp = "([a-zA-Z0-9]*)", message ="Laukas turi būti sudarytas tik iš skaičių ir raidžių")
+    @Pattern(regexp = "([a-žA-ž0-9]*)", message ="Laukas turi būti sudarytas tik iš skaičių ir raidžių")
     @NotEmpty(message = "*Neįvestas vartotojo vardas")
     @Length(min = 5, max=30,  message="Vartotojo vardas turi būti nuo 5 iki 30 simbolių")
     @Column(name = "username")

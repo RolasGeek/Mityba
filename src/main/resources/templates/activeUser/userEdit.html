@@ -12,7 +12,8 @@
 
 <body>
 <div class="container" th:if="@{userLevel != -1}">
-    <table th:replace="include/menu :: menu"></table>
+    <table th:replace="include/magic :: menu"></table>
+    <br><br><br>
     <div style="margin-top:40px;font-size:25px">Vartotojo duomenys:</div>
     <span th:utext="${actionMessage}" style="color:red"></span>
         <form action="#" th:action="@{/activeUser/editUserInfo/1}" th:object="${user}" method="post" role="form">

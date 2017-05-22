@@ -12,7 +12,8 @@
 
 <body>
     <div class="container" action="#" th:action="@{/user/productInput}" method="get">
-        <div th:replace="include/menu :: menu"></div>
+        <div th:replace="include/magic :: menu"></div>
+        <br><br><br>
         <div style="margin-top:40px;font-size:25px">Produktai:</div>
         <span th:utext="${actionMessage}" style="color:red"></span>
         <table id="t02" width="20%" >
@@ -25,7 +26,6 @@
             <tr>
                 <th>Pavadinimas</th>
                 <th>Kiekis</th>
-                <th>Matavimo vienetas</th>
             </tr>
         </table>
         <table id="t02" width="350px" border="1">
@@ -44,6 +44,7 @@
                 </form>
             </tr>
         </table>
+        <br>
         <a href="/user/recipesByProducts" th:href="@{/user/recipesByProducts}" class="btn btn-large btn-success">Gauti receptus</a>
     </div>
 </body>

@@ -4,7 +4,7 @@
 
 <head>
     <title>Receptas</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/admin/home.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/css/admin/userlist.css}" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -12,29 +12,30 @@
 
 <body>
 <div class="container">
-    <table th:replace="include/menu :: menu"></table>
+    <table th:replace="include/magic :: menu"></table>
     <span th:utext="${actionMessage}" style="color:red"></span>
+    <br><br><br>
     <h3 th:text="${recipe.name}"></h3>
     <form action="#" th:action="@{${'/user/recipeInfo/like' + recipe.id}}" th:object="${frecipe}" method="post" role="form">
         <fieldset style="margin-right: 600px; ">
             <br>
-            <img th:with="link=${'/image/' + recipe.id}" th:src="@{${link}}" />
-            <table id="t02" >
+            <img style="width: 80%;border-radius: 6px;"th:with="link=${'/image/' + recipe.id}" th:src="@{${link}}" />
+            <table>
                 <tr><th>Gaiminimo laikas</th></tr>
                 <tr><td th:text="${recipe.cookingTime} + ', min.'"></td> </tr>
                 <tr><th>Porcijų skaičius</th></tr>
                 <tr><td th:text="${recipe.numberOfServings}"></td></tr>
             </table>
-            <h4>Ingredientai:</h4>
-            <table id="t02" >
+            <h5 style="font-weight: bold">Ingredientai:</h5>
+            <table>
                 <tr th:each="i : ${ingredients}">
-                    <td th:text="${i.name}"></td>
-                    <td th:each="u : ${rIngredients}"
-                        th:if="${u.ingredientId} == ${i.id}" th:text="${u.amount}"></td>
-                    <td th:text="${i.measureUnit}"></td>
+                    <td style="padding: 5px" th:text="${i.name}"> </td>
+                    <td style="padding: 5px"th:each="u : ${rIngredients}"
+                        th:if="${u.ingredientId} == ${i.id}" th:text="${u.amount}"> </td>
+                    <td th:text="${i.measureUnit}"> </td>
                 </tr>
             </table>
-            <h4>Paruošimas</h4>
+            <h5 style="font-weight: bold">Paruošimas</h5>
             <p th:text="${recipe.description}"></p>
             <br>
             <a th:if="${userLevel} == 0" href="/user/recipeInfo/like/${recipe.id}" th:href="@{${'/user/recipeInfo/like/' + recipe.id}}" class="btn btn-large btn-success">Mėgti</a>

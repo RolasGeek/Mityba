@@ -1,0 +1,66 @@
+<div class="navbar navbar-default navbar-fixed-top" th:fragment="menu" xmlns:th="http://www.w3.org/1999/xhtml">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#" th:href="@{/mainMenu}">Pagrindinis</a>
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li >
+                    <a href="#" th:href="@{/user/productInput}">Receptai pagal produktus</a>
+                </li>
+                <li >
+                    <a href="#" th:href="@{/user/recipesByPopularity}">Populiariausi</a>
+                </li>
+                <li >
+                    <a href="#" th:href="@{/user/recipesByNewness}">Naujausi</a>
+                </li>
+                <li th:if="${userLevel == 1}">
+                    <a href="#" th:href="@{/home}">Pagrindinis</a>
+                </li>
+                <li th:if="${userLevel != -1}" >
+                    <a href="#" th:href="@{/activeUser/userEdit}">Redaguoti profilį</a>
+                </li>
+                <li th:if="${userLevel == 0 and !hasList}" >
+                    <a href="#" th:href="@{/activeUser/ProductListCreate}" >Sukurti ingredientų sąrašą</a>
+                </li>
+                <li th:if="${userLevel == 0 and hasList}">
+                    <a href="#" th:href="@{/activeUser/ProductListEdit}">Redaguoti ingredientų sąrašą</a>
+                </li>
+
+                <li th:if="${userLevel == 1}" >
+                    <a href="#" th:href="@{/admin/userlist}">Vartotojai</a>
+                </li>
+                <li th:if="${userLevel == 1}" >
+                    <a href="#" th:href="@{/admin/ingredientlistedit}">Ingredientai</a>
+                </li>
+                <li th:if="${userLevel == 1}" >
+                    <a href="#" th:href="@{/admin/recipeCreate}">Kurti receptą</a>
+                </li>
+
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li th:if="${userLevel == -1}" >
+                    <a href="/login" th:href=@{/login}>
+                        <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>&nbsp;Prisijungti
+                    </a>
+                </li>
+                <li th:if="${userLevel == -1}" >
+                    <a href="/passreset" th:href="@{/passreset}">
+                         <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>&nbsp;Atkurti slaptažodį
+                    </a>
+                </li>
+                <li th:if="${userLevel != -1}" >
+                    <a href="/logout" th:href="@{/logout}">
+                        <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>&nbsp;Atsijungti
+                    </a>
+                    <form style="visibility: hidden" id="form" method="post" action="#" th:action="@{/logout}"></form>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
