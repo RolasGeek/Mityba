@@ -13,6 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,6 +34,7 @@ public class ManagerController {
     UserIngredientService uiService;
 
     private List<RecipeIngredient> recipeIngredients = new ArrayList<>();
+    private List<RecipeIngredient> recipeIngredients2 = new ArrayList<>();
     
     @RequestMapping(value="/admin/userlist", method = RequestMethod.GET)
     public ModelAndView openUserList(){
@@ -66,7 +68,7 @@ public class ManagerController {
         modelAndView.setViewName("admin/ingredientlistedit");
         return modelAndView;
     }
-
+    
     // recepto kurimo lango atidarymas
     @RequestMapping(value="/admin/recipeCreate", method = RequestMethod.GET)
     public ModelAndView recipeCreate(){
@@ -92,7 +94,7 @@ public class ManagerController {
         ModelAndView modelAndView = recipeCreate();
         if (!bindingResult.hasErrors()) {
             if (tempRecipeIngredient.getAmount() != null) {
-                if (!ingredientExistsInRecipeIngredientList(tempRecipeIngredient)) {
+                if (!ingredientExistsInRecipeIngredientList(recipeIngredients, tempRecipeIngredient)) {
                     recipeIngredients.add(tempRecipeIngredient);
                     modelAndView.addObject("actionMessage", "Ingredientas pridėtas");
                     return modelAndView;
@@ -103,6 +105,63 @@ public class ManagerController {
             }
         }
         modelAndView.addObject("actionMessage", "Ingredientas nepridėtas");
+        return modelAndView;
+    }
+    
+    // recepto redagavimo lango atidarymas
+    @RequestMapping(value="/admin/recipeInfoEdit/{recipe_id}", method = RequestMethod.GET)
+    public ModelAndView recipeInfoEdit(@PathVariable("recipe_id") Long recipeId){
+        ModelAndView modelAndView = new ModelAndView();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        RegisteredUser user = rUserService.findUserByUsername(auth.getName());
+        Recipe _recipe = rService.findRecipeById(recipeId);
+        List<Ingredient> ingredients = iService.getIngredients();
+        recipeIngredients2 = riService.findRecipeIngredientsByRecipeId(recipeId);
+        modelAndView.addObject("categories", Category.values());
+        modelAndView.addObject("ingredients", ingredients);
+        modelAndView.addObject("recipe", _recipe);
+        modelAndView.addObject("recipeIngredients", recipeIngredients2);
+        modelAndView.addObject("tempRecipeIngredient", new RecipeIngredient());
+        modelAndView.addObject("userLevel", user.getUserLevel());
+        modelAndView.addObject("hasList", (uiService.findUserIngredientByUsername(user.getUsername()).size() > 0));
+        modelAndView.addObject("userName", "Welcome " + user.getFirstName() + " " + user.getLastName() + " (" + user.getEmail() + ")");
+        modelAndView.setViewName("admin/recipeInfoEdit");
+        return modelAndView;
+    }
+    
+    @RequestMapping(value="/admin/recipeInfoEdit", method = RequestMethod.POST)
+    public ModelAndView addRecipeIngredient2(@Valid RecipeIngredient tempRecipeIngredient, Recipe recipe, BindingResult bindingResult) {
+        ModelAndView modelAndView = recipeInfoEdit(recipe.getId());
+        if (!bindingResult.hasErrors()) {
+            if (tempRecipeIngredient.getAmount() != null) {
+                if (!ingredientExistsInRecipeIngredientList(recipeIngredients2, tempRecipeIngredient)) {
+                    recipeIngredients2.add(tempRecipeIngredient);
+                    modelAndView.addObject("actionMessage", "Ingredientas pridėtas");
+                    return modelAndView;
+                } else {
+                    modelAndView.addObject("actionMessage", "Toks ingredientas jau yra sąraše!");
+                    return modelAndView;
+                }
+            }
+        }
+        modelAndView.addObject("actionMessage", "Ingredientas nepridėtas");
+        return modelAndView;
+    }
+    
+    @RequestMapping(value="/admin/removeRecipeIngredient", method = RequestMethod.POST)
+    public ModelAndView removeRecipeIngredient(@RequestParam("iid") Long iid, Recipe recipe) {
+        System.out.println("recipe id:"+recipe.getId());
+        System.out.println("id:"+iid);
+        ModelAndView modelAndView = recipeInfoEdit(recipe.getId());
+        for(RecipeIngredient r : recipeIngredients2) {
+            if(r.getIngredientId() == iid) {
+                System.out.println("rid"+r.getIngredientId());
+                System.out.println("iid"+iid);
+                recipeIngredients2.remove(r);
+                modelAndView.addObject("actionMessage", "Ingredientas pašalintas");
+                return modelAndView;
+            }
+        }
         return modelAndView;
     }
     
@@ -174,8 +233,47 @@ public class ManagerController {
         return recipeListModel;
     }
 
-    private boolean ingredientExistsInRecipeIngredientList(RecipeIngredient r){
-        for (RecipeIngredient ri : recipeIngredients) {
+    // recepto sukurimas
+    @RequestMapping(value="/admin/editRecipeInfo", method = RequestMethod.POST)
+    public ModelAndView editRecipeInfo(@Valid Recipe recipe,
+                                     BindingResult bindingResult,
+                                     @RequestParam("randomMagic")MultipartFile multipartFile) throws IOException {
+        ModelAndView recipeListModel = null;
+        System.out.println(recipe.getId());
+        if (!bindingResult.hasErrors() && recipeIngredients2.size() > 0){
+            System.out.println("good");
+            Recipe oldRecipe = rService.findRecipeById(recipe.getId());
+            byte[] oldImg = oldRecipe.getImage();
+            byte[] newImg = multipartFile.getBytes();
+            if(newImg != null && newImg.length>0) recipe.setImage(newImg);
+            else if(oldImg != null) recipe.setImage(oldImg);
+            
+            recipe.setCreationDate(oldRecipe.getCreationDate());
+            recipe.setFavouriteCount(oldRecipe.getFavouriteCount());
+            recipe.setUnseenDays(oldRecipe.getUnseenDays());
+            recipe.setViewCount(oldRecipe.getViewCount());
+            rService.updateRecipe(recipe);
+            List<RecipeIngredient> dbris = riService.findRecipeIngredientsByRecipeId(recipe.getId());
+            for(RecipeIngredient ri : dbris) {
+                riService.removeRecipeIngredient(ri);
+            }
+            for(RecipeIngredient ri : recipeIngredients2) {
+                ri.setRecipeId(recipe.getId());
+                riService.saveRecipeIngredient(ri);
+            }
+            recipeIngredients2 = new ArrayList<>();
+            recipeListModel = recipeInfoEdit(recipe.getId());
+            recipeListModel.addObject("RecipeActionMessage", "Receptas pakeistas");
+        } else {
+            System.out.println("bad");
+            recipeListModel = recipeInfoEdit(recipe.getId());
+            recipeListModel.addObject("RecipeActionMessage", "Receptas nepakeistas");
+        }
+        return recipeListModel;
+    }
+    
+    private boolean ingredientExistsInRecipeIngredientList(List<RecipeIngredient> ril, RecipeIngredient r){
+        for (RecipeIngredient ri : ril) {
             if (ri.getIngredientId() == r.getIngredientId()) {
                 return true;
             }

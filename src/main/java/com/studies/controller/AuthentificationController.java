@@ -79,19 +79,6 @@ public class AuthentificationController {
         return modelAndView;
     }
 
-    @RequestMapping(value="/admin/home", method = RequestMethod.GET)
-    public ModelAndView adminHome(){
-        ModelAndView modelAndView = new ModelAndView();
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        RegisteredUser user = service.findUserByUsername(auth.getName());
-        modelAndView.addObject("userName", "Welcome " + user.getFirstName() + " " + user.getLastName() + " (" + user.getEmail() + ")");
-        modelAndView.addObject("userMessage","Content Available Only for Users with Admin Role");
-        modelAndView.setViewName("admin/home");
-        modelAndView.addObject("userLevel", Integer.parseInt(getRole()));
-        modelAndView.addObject("hasList", false);
-        return modelAndView;
-    }
-
     @RequestMapping(value={"/", "/mainMenu"}, method = RequestMethod.GET)
     public ModelAndView home(){
         ModelAndView modelAndView = new ModelAndView();

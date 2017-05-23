@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" xmlns:tr="http://www.thymeleaf.org">
+
+<head>
+    <title>Recepto kūrimas</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/admin/ingredientlistedit.css}" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+<div class="container">
+    <div th:replace="include/magic :: menu"></div>
+    <br><br><br>
+    <div style="margin-top:40px;font-size:25px">Recepto redagavimas</div>
+    <span th:utext="${RecipeActionMessage}" style="color:red"></span>
+        <form action="#" th:action="@{/admin/editRecipeInfo}" method="post" enctype="multipart/form-data" role="form">
+            <input type="hidden" th:field="*{recipe.id}">
+            <input type="text" th:field="*{recipe.name}" placeholder="pavadinimas">
+            <select th:field="*{recipe.category}">
+                <option th:each="c : ${categories}" th:value="${c.name}" th:text="${c.name}"></option>
+            </select>
+            <input type="number" step="5" min="0" th:field="*{recipe.cookingTime}" placeholder="gaminimo laikas">
+            <input type="text" th:field="*{recipe.description}" placeholder="aprašymas">
+            <input type="number" min="0" th:field="*{recipe.numberOfServings}" placeholder="porcijų skaičius">
+            <img style="width: 25%;border-radius: 6px;"th:with="link=${'/image/' + recipe.id}" th:src="@{${link}}" />
+            <input type="file" accept=".jpg, .png" name="randomMagic">
+            <br>
+            <br>
+            <span th:utext="${actionMessage}" style="color:red"></span>
+            <div th:object="${recipe}" method="post" th:action="@{/admin/recipeInfoEdit}">
+                <table>
+                    <tr>
+                        <th>Ingredientas</th>
+                        <th>Kiekis</th>
+                    </tr>
+                    <tr th:each="r : ${recipeIngredients}">
+                        <td>
+                            <select th:value="${r.ingredientId}" disabled="true">
+                                <option th:selected="${r.ingredientId == i.id}" th:each="i : ${ingredients}" th:value="${i.id}" th:text="${i.name} + ', ' + ${i.getMeasureUnit()}"></option>
+                            </select>
+                        </td>
+                        <td><input type="number" step="0.5" min="0" th:value="${r.amount}" readonly></td>
+                        <td>
+                            <form th:object="${recipe}" th:action="@{/admin/removeRecipeIngredient}" method="post">
+                                <input type="hidden" name="iid" th:value="${r.ingredientId}"/>
+                                <button class="btn btn-sm btn-danger btn-block" name="Submit" type="Submit" th:formaction="@{/admin/removeRecipeIngredient}" th:text="Šalinti"></button>
+                            </form>
+                        </td>
+                    </tr>
+                    <tr th:object="${tempRecipeIngredient}">
+                        <td>
+                            <select th:field="*{ingredientId}">
+                                <option th:each="i : ${ingredients}" th:value="${i.id}" th:text="${i.name} + ', ' + ${i.getMeasureUnit()}"></option>
+                            </select>
+                        </td>
+                        <td th:object="${tempRecipeIngredient}">
+                            <input type="number" th:field="*{amount}" step="0.5" min="0"  placeholder="kiekis">
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-primary btn-block" name="Submit" type="Submit" th:formaction="@{/admin/recipeInfoEdit}" th:text="Pridėti"></button>
+                        </td>
+                    </tr>
+                </table>
+
+            </div>
+            <button class="btn btn-sm btn-primary btn-block" name="Submit" type="Submit"  th:text="Redaguoti"></button>
+        </form>
+    <div th:replace="include/footer :: footer"></div>
+</div>
+</body>
+</html>

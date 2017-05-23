@@ -40,6 +40,7 @@
             <br>
             <a th:if="${userLevel} == 0" href="/user/recipeInfo/like/${recipe.id}" th:href="@{${'/user/recipeInfo/like/' + recipe.id}}" class="btn btn-large btn-success">Mėgti</a>
             <a th:if="${userLevel} == 0" href="/activeUser/productList/${recipe.id}" th:href="@{${'/activeUser/productList/' + recipe.id}}" class="btn btn-large btn-success">Gauti trūkstamų produktų sąrašą</a>
+            <a th:if="${userLevel} == 1" href="/admin/recipeInfoEdit/${recipe.id}" th:href="@{${'/admin/recipeInfoEdit/' + recipe.id}}" class="btn btn-large btn-success">Redaguoti</a>
         </fieldset>
     </form>
 </div>

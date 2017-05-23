@@ -19,9 +19,6 @@
                 <li >
                     <a href="#" th:href="@{/user/recipesByNewness}">Naujausi</a>
                 </li>
-                <li th:if="${userLevel == 1}">
-                    <a href="#" th:href="@{/home}">Pagrindinis</a>
-                </li>
                 <li th:if="${userLevel != -1}" >
                     <a href="#" th:href="@{/activeUser/userEdit}">Redaguoti profilį</a>
                 </li>
